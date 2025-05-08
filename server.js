@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 // Server
-const port = process.env.PORT || 5503;
+const port = process.env.PORT || 5500;
 const host = process.env.HOST || "localhost";
 
 
