@@ -1,6 +1,13 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+#wrapper {
+  padding: 20px;
+}
+header, nav, footer {
+  background-color: #f4f4f4;
+  padding: 10px;
+  margin-bottom: 10px;
 }

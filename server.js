@@ -9,42 +9,31 @@ const express = require("express");
 const env = require("dotenv").config();
 const path = require("path");
 const app = express();
-const static = require("./routes/static");  
-
 const expressLayouts = require("express-ejs-layouts");
+const staticRoutes = require("./routes/static");
 
-/* ***********************
- * View Engine and Templates
- *************************/
+// View engine and layout setup
 app.set("view engine", "ejs");
 app.use(expressLayouts);
+app.set("layout", "./layouts/layout");
+app.set("views", path.join(__dirname, "views"));
 
-app.set("layout", "./layouts/layout"); 
+// Static files
+app.use(staticRoutes);
 
-// Set views directory using path module
-app.set("views", path.join(__dirname, "views")); 
-
-/* ***********************
- * Routes
- *************************/
-// Static files route
-app.use(static);
-
-// Index route to render the "index" view with the title
-app.get("/", function(req, res){
+// Routes
+app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
 
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
+// Server
+const port = process.env.PORT || 5503;
+const host = process.env.HOST || "localhost";
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
+
 app.listen(port, () => {
-  console.log(`App listening on ${host}:${port}`);
+  console.log(`App listening at http://${host}:${port}`);
 });
+
+
+
