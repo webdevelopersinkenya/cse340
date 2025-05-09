@@ -25,11 +25,14 @@ header img {
   height: auto;
   
 }
+
+
 nav {
   background-color: black;
   color: white;
   padding: 0.4rem 0; /* Reduced vertical padding */
   text-align: center;
+  margin-top: 30px; /* Adjust the value as needed */
 }
 
 
@@ -66,61 +69,132 @@ nav ul li a {
 main {
   padding: 1em;
 }
-.upgrades {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+
+#top-header {
+  font-size: 28px; /* Adjust as needed */
+  color: black;
+  font-weight: bold;
+  margin:auto;
+  padding:auto;
 }
 
-.upgrade-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-top: 1.5rem;
+.site-Name {
+  font-size: 28px; /* Optional if you want different size from header */
+  color: black;
+  font-weight: bold;
 }
 
-.upgrade-item {
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  border-color:skyblue;
-  padding: 1.5rem;
+.site-Name a {
+  font-size: 28px; 
+  color: black;
+  font-weight: bold;
+  text-decoration: none; 
+  
+}
+.vehicle-image-section {
   text-align: center;
-  transition: transform 0.3s ease;
+  margin-top: 20px;
 }
 
-.upgrade-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.vehicle-image {
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.upgrade-item img {
-  width: 100%;
-  max-width: 300px;
-  height: 200px;
-  object-fit: contain;
-  margin-bottom: 1rem;
-}
 
-.ratings {
-  margin-top: 1rem;
-  font-style: italic;
-  color: #666;
-}
-
-.ratings p {
-  margin: 0.5rem 0;
-}
 section {
-  padding: 25px 15px; /* Reduced from 40px 20px */
+  padding: 25px 15px; 
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.upgrade-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.upgrade-header h1,
+.upgrade-header h2 {
+  margin: 0;
+  font-weight: bold;
+  color: black;
+}
+
+
+.shawn-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 20px;
+}
+
+.shawn {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.poster-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+
+.poster {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+
+}
+
+.poster-card {
+  background-color: skyblue;
+  padding: 8px;
+  text-align: center;
+  border-radius: 10px;
+  width: 100px;
+ 
+}
+
+
+.poster-card p {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+}
+
+
+.poster-text {
+  max-width: 400px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.poster-text h2 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.poster-text p {
+  line-height: 1.6;
+  margin: 0;
 }
 
 footer {
   background: #222;
   color: #fff;
   text-align: center;
-  padding: 0.4rem 0; /* Reduced vertical padding */
+  padding: 0.4rem 0; 
 }
 
 /* Desktop media query */
@@ -129,12 +203,7 @@ footer {
     flex-direction: row;
     justify-content: space-around;
   }
-  .upgrade-grid {
-    grid-template-columns: 1fr;
-  }
-  .upgrade-item img {
-    height: 150px;
-  }
+  
   main {
     max-width: 1200px;
     margin: 0 auto;
