@@ -1,4 +1,4 @@
-const invModel = require("../models/inventory-model");
+const inventoryModel = require('../../models/inventory-model');
 
 async function getNav() {
   const data = await invModel.getClassifications();
