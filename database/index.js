@@ -1,46 +1,22 @@
-const { Pool } = require("pg");
-require("dotenv").config();
+// models/inventory-model.js
+const pool = require("../database"); // Correct path to database/index.js
 
-let pool;
-
-if (process.env.NODE_ENV === "development") {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    connectionTimeoutMillis: 5000, // max 5s to connect
-    idleTimeoutMillis: 10000,      // close idle clients after 10s
-  });
-
-  module.exports = {
-    async query(text, params) {
-      try {
-        const res = await pool.query(text, params);
-        console.log("executed query", { text });
-        return res;
-      } catch (error) {
-        console.error("error in query", { text });
-        throw error;
-      }
-    },
-  };
-} else {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 5000,
-    idleTimeoutMillis: 10000,
-  });
-
-  module.exports = {
-    async query(text, params) {
-      try {
-        const res = await pool.query(text, params);
-        return res;
-      } catch (error) {
-        console.error("error in query", { text });
-        throw error;
-      }
-    },
-  };
+/* ***************************
+ *  Get all inventory items and classification_name by classification_id
+ * ************************** */
+async function getInventoryByClassificationId(classification_id) {
+  try {
+    const data = await pool.query(
+      `SELECT * FROM public.inventory AS i 
+       JOIN public.classification AS c 
+       ON i.classification_id = c.classification_id 
+       WHERE i.classification_id = $1`,
+      [classification_id]
+    );
+    return data.rows;
+  } catch (error) {
+    console.error("getInventoryByClassificationId error: " + error);
+    throw error;
+  }
 }
+
