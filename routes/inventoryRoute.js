@@ -3,7 +3,7 @@
 const express = require("express");
 const router = express.Router();
 const invController = require("../controllers/invController");
-const utilities = require('./src/utilities');
+const utilities = require('../src/utilities');
 
 router.get("/detail/:inv_id", 
   utilities.handleErrors(invController.buildDetailView)
