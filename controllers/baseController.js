@@ -1,4 +1,4 @@
-const utilities = require("../utilities/")
+const utilities = require("../Utilities/")
 const baseController = {}
 
 baseController.buildHome = async function(req, res){
