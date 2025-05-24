@@ -15,7 +15,7 @@ const staticRoutes = require("./routes/static");
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require('../utilities');
-const inventoryModel = require('./models/inventory-model');
+const inventoryModel = require("../models/inventory-model");
 
 
 // View engine and layout setup
