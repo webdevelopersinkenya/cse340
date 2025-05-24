@@ -8,6 +8,7 @@
  *************************/
 const express = require("express");
 const env = require("dotenv").config();
+console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL);
 const path = require("path");
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
