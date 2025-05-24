@@ -1,9 +1,7 @@
 // models/inventory-model.js
-const pool = require("../database"); // Make sure this is correct!
+const pool = require("../database"); // Your database connection
 
-/* ***************************
- *  Get all inventory items and classification_name by classification_id
- * ************************** */
+// Existing function
 async function getInventoryByClassificationId(classification_id) {
   try {
     const data = await pool.query(
@@ -20,4 +18,20 @@ async function getInventoryByClassificationId(classification_id) {
   }
 }
 
-module.exports = { getInventoryByClassificationId };
+// New function to get all classifications
+async function getClassifications() {
+  try {
+    const data = await pool.query(
+      `SELECT * FROM public.classification ORDER BY classification_name`
+    );
+    return data.rows;
+  } catch (error) {
+    console.error("getClassifications error: " + error);
+    throw error;
+  }
+}
+
+module.exports = {
+  getInventoryByClassificationId,
+  getClassifications,   // Add this export!
+};
