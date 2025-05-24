@@ -1,23 +1,37 @@
+// utilities/index.js
+const invModel = require("../models/inventory-model");
 
-const invModel = require('../models/inventory-model');
-
+// Build navigation bar from classifications
 async function getNav() {
-  const data = await invModel.getClassifications();
-  let list = "<ul>";
-  list += '<li><a href="/" title="Home page">Home</a></li>';
-  data.rows.forEach((row) => {
-    list += `<li><a href="/inv/type/${row.classification_id}" title="See our inventory of ${row.classification_name} vehicles">${row.classification_name}</a></li>`;
-  });
-  list += "</ul>";
-  return list;
+  try {
+    const data = await invModel.getClassifications();
+    // Check if data and data.rows exist and are arrays
+    const classifications = data?.rows ?? [];
+
+    let list = "<ul>";
+    list += '<li><a href="/" title="Home page">Home</a></li>';
+    classifications.forEach((row) => {
+      list += `<li><a href="/inv/type/${row.classification_id}" title="See our inventory of ${row.classification_name} vehicles">${row.classification_name}</a></li>`;
+    });
+    list += "</ul>";
+    return list;
+  } catch (error) {
+    console.error("Error in getNav:", error.message);
+    return "<ul><li><a href='/' title='Home page'>Home</a></li></ul>";
+  }
 }
 
-async function buildClassificationGrid(data) {
-  let grid = "";
-  if (data.length > 0) {
-    grid = '<ul id="inv-display">';
-    data.forEach((vehicle) => {
-      grid += `<li>
+// Build grid of vehicle listings
+function buildClassificationGrid(data) {
+  if (!Array.isArray(data) || data.length === 0) {
+    return '<p class="notice">Sorry, no matching vehicles could be found.</p>';
+  }
+
+  let grid = '<ul id="inv-display">';
+  data.forEach((vehicle) => {
+    const priceFormatted = new Intl.NumberFormat("en-US").format(vehicle.inv_price);
+    grid += `
+      <li>
         <a href="../../inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
           <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors" />
         </a>
@@ -28,18 +42,21 @@ async function buildClassificationGrid(data) {
               ${vehicle.inv_make} ${vehicle.inv_model}
             </a>
           </h2>
-          <span>$${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</span>
+          <span>$${priceFormatted}</span>
         </div>
-      </li>`;
-    });
-    grid += "</ul>";
-  } else {
-    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>';
-  }
+      </li>
+    `;
+  });
+  grid += "</ul>";
   return grid;
 }
 
+// Build detailed view of a single vehicle
 function buildVehicleDetailHtml(vehicle) {
+  if (!vehicle) {
+    return "<p>Vehicle details not available.</p>";
+  }
+
   const priceFormatted = Number(vehicle.inv_price).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -62,17 +79,18 @@ function buildVehicleDetailHtml(vehicle) {
   `;
 }
 
+// Wrapper to catch and forward errors in controllers
 function handleErrors(controller) {
   return async function (req, res, next) {
     try {
       await controller(req, res, next);
     } catch (err) {
+      console.error("Controller error:", err.message);
       next(err);
     }
   };
 }
 
-// EXPORT EVERYTHING FROM ONE PLACE
 module.exports = {
   getNav,
   buildClassificationGrid,
