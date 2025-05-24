@@ -14,10 +14,8 @@ const expressLayouts = require("express-ejs-layouts");
 const staticRoutes = require("./routes/static");
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
-const utilities = require('../utilities');
-const inventoryModel = require("../models/inventory-model");
-
-
+const utilities = require('./utilities');
+const inventoryModel = require('./models/inventory-model');
 // View engine and layout setup
 app.set("view engine", "ejs");
 app.use(expressLayouts);

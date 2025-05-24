@@ -1,4 +1,5 @@
-const pool = require("../database/");
+// models/inventory-model.js
+const pool = require("../database"); // Make sure this is correct!
 
 /* ***************************
  *  Get all inventory items and classification_name by classification_id
@@ -19,35 +20,4 @@ async function getInventoryByClassificationId(classification_id) {
   }
 }
 
-/* ***************************
- *  Get inventory item by ID
- * ************************** */
-async function getInventoryItemById(inv_id) {
-  try {
-    const sql = "SELECT * FROM inventory WHERE inv_id = $1";
-    const result = await pool.query(sql, [inv_id]);
-    return result.rows[0];
-  } catch (error) {
-    throw new Error("Database error when fetching inventory item: " + error.message);
-  }
-}
-
-/* ***************************
- *  Get all classifications
- * ************************** */
-async function getClassifications() {
-  try {
-    const sql = "SELECT * FROM classification ORDER BY classification_name";
-    const data = await pool.query(sql);
-    return data;  // contains .rows property
-  } catch (error) {
-    console.error("getClassifications error: " + error);
-    throw error;
-  }
-}
-
-module.exports = {
-  getInventoryByClassificationId,
-  getInventoryItemById,
-  getClassifications,
-};
+module.exports = { getInventoryByClassificationId };

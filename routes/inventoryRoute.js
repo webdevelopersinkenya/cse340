@@ -1,5 +1,4 @@
 
-
 const express = require("express");
 const router = express.Router();
 const invController = require("../controllers/invController");
@@ -12,7 +11,7 @@ router.get("/detail/:inv_id",
 
 router.get("/error/test", (req, res, next) => {
   throw new Error("Intentional error for testing 500");
-
-  module.exports = router;
 });
 
+// EXPORT THE ROUTER AFTER DEFINING ALL ROUTES
+module.exports = router;
