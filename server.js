@@ -21,6 +21,7 @@ const inventoryModel = require('./models/inventory-model');
 // View engine and layout setup
 app.set("view engine", "ejs");
 app.use(expressLayouts);
+app.use("/inv", inventoryRoute);
 app.set("layout", "./layouts/layout");
 app.set("views", path.join(__dirname, "views"));
 
