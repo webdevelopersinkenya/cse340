@@ -1,37 +1,13 @@
-// models/inventory-model.js
-const pool = require("../database"); // Your database connection
+const pool = require("../database/");
 
-// Existing function
-async function getInventoryByClassificationId(classification_id) {
+const getInventoryById = async (invId) => {
   try {
-    const data = await pool.query(
-      `SELECT * FROM public.inventory AS i 
-       JOIN public.classification AS c 
-       ON i.classification_id = c.classification_id 
-       WHERE i.classification_id = $1`,
-      [classification_id]
-    );
-    return data.rows;
-  } catch (error) {
-    console.error("getInventoryByClassificationId error: " + error);
-    throw error;
+    const sql = "SELECT * FROM inventory WHERE inv_id = $1";
+    const result = await pool.query(sql, [invId]);
+    return result.rows[0];
+  } catch (err) {
+    throw err;
   }
-}
-
-// New function to get all classifications
-async function getClassifications() {
-  try {
-    const data = await pool.query(
-      `SELECT * FROM public.classification ORDER BY classification_name`
-    );
-    return data.rows;
-  } catch (error) {
-    console.error("getClassifications error: " + error);
-    throw error;
-  }
-}
-
-module.exports = {
-  getInventoryByClassificationId,
-  getClassifications,   // Add this export!
 };
+
+module.exports = { getInventoryById };

@@ -1,28 +1,35 @@
-<%- include('../partials/header') %>
-<main>
-  <h1><%= title %></h1>
-  <%- vehicleHtml %>
-</main>
-<%- include('../partials/footer') %>
-
-<style>
-.vehicle-detail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.vehicle-image {
-  flex: 1 1 40%;
-}
-
-.vehicle-info {
-  flex: 1 1 50%;
-}
-
-@media (max-width: 768px) {
-  .vehicle-detail {
-    flex-direction: column;
-  }
-}
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head.ejs %>
+  <title><%= title %></title>
+  <style>
+    .vehicle-detail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .vehicle-detail img {
+      max-width: 100%;
+      height: auto;
+    }
+    .vehicle-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    @media (max-width: 768px) {
+      .vehicle-detail {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <% include ../partials/header.ejs %>
+  <main>
+    <h1><%= title %></h1>
+    <div><%- htmlContent %></div>
+  </main>
+  <% include ../partials/footer.ejs %>
+</body>
+</html>
