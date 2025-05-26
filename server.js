@@ -48,7 +48,7 @@ app.use(staticRoutes);
 app.use("/", baseRoute);
 app.use("/account", accountRoute);
 app.use("/inventory", inventoryRoute);
-app.use("/inv", inventoryRoute); // if you need this alternate route as well
+app.use("/inv", inventoryRoute); // optional alternate route
 
 // Custom pages
 app.get("/", baseController.buildHome);
@@ -71,6 +71,7 @@ app.use("/error", errorRoute);
 /* ***********************
  * 404 and Global Error Handlers
  *************************/
+
 // 404 handler
 app.use((req, res, next) => {
   const error = new Error("Page not found");
@@ -78,13 +79,14 @@ app.use((req, res, next) => {
   next(error);
 });
 
-// Global error handler
+// Global error handler - passes error object too!
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status);
   res.render("errors/error", {
     title: `${status} Error`,
-    message: err.message
+    message: err.message,
+    error: err  // <-- pass the error object here
   });
 });
 
