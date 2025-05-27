@@ -7,18 +7,20 @@
  * Require Statements
  *************************/
 const express = require("express");
-const env = require("dotenv").config();
-console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL);
-
+const session = require("express-session");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
+const flash = require("connect-flash");
+
+const pool = require("./database");  // Import the pool here
 
 const staticRoutes = require("./routes/static");
-const baseController = require("./controllers/baseController");
 const baseRoute = require("./routes/baseRoute");
 const accountRoute = require("./routes/accountRoute");
 const inventoryRoute = require("./routes/inventoryRoute");
 const errorRoute = require("./routes/errorRoute");
+
+console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL);
 
 /* ***********************
  * Create Express App
@@ -39,19 +41,37 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ***********************
- * Middleware & Routes
+ * Session Middleware
  *************************/
-// Static routes
+app.use(session({
+  store: new (require("connect-pg-simple")(session))({
+    pool: pool,                    // Use pool object here
+    createTableIfMissing: true,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: "sessionId",
+}));
+
+// Express Messages Middleware
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+/* ***********************
+ * Routes
+ *************************/
 app.use(staticRoutes);
 
-// Main routes
 app.use("/", baseRoute);
 app.use("/account", accountRoute);
 app.use("/inventory", inventoryRoute);
-app.use("/inv", inventoryRoute); // optional alternate route
+app.use("/inv", inventoryRoute); // Optional alternate route
 
 // Custom pages
-app.get("/", baseController.buildHome);
 app.get("/custom", (req, res) => {
   res.render("custom", { title: "Custom Vehicles" });
 });
@@ -79,14 +99,14 @@ app.use((req, res, next) => {
   next(error);
 });
 
-// Global error handler - passes error object too!
+// Global error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status);
   res.render("errors/error", {
     title: `${status} Error`,
     message: err.message,
-    error: err  // <-- pass the error object here
+    error: err,
   });
 });
 

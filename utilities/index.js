@@ -1,7 +1,5 @@
-// utilities.js or utilities/index.js
 
-/**
- * Generates a static HTML navigation bar.
+ /* Generates a static HTML navigation bar.
  */
 const getNav = () => {
   return `
