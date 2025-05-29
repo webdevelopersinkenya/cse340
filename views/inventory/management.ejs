@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inventory Management</title>
+</head>
+<body>
+  <h1>Inventory Management</h1>
+  <% if (messages && messages.length) { %>
+    <div>
+      <% messages.forEach(msg => { %>
+        <p><%= msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <a href="/inv/add-classification">Add New Classification</a>
+  <br />
+  <a href="/inv/add-inventory">Add New Inventory</a>
+</body>
+</html>

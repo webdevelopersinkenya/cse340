@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Classification</title>
+</head>
+<body>
+  <h1>Add New Classification</h1>
+  <% if (errors && errors.length) { %>
+    <div>
+      <% errors.forEach(error => { %>
+        <p style="color: red;"><%= error.msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <form action="/inv/add-classification" method="post">
+    <label for="classification_name">Classification Name (no spaces or special chars):</label>
+    <input type="text" name="classification_name" id="classification_name" pattern="[A-Za-z0-9]+" required />
+    <button type="submit">Add Classification</button>
+  </form>
+</body>
+</html>
