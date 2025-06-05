@@ -122,7 +122,7 @@ main {
     margin-top: 30px;
     flex-wrap: wrap;
     /* --- CHANGE START --- */
-    justify-content: center; /* Centers the delorean-image and delorean-info group */
+    justify-content: space-between; /* Pushes delorean-image left and delorean-info right */
     /* --- CHANGE END --- */
 }
 
@@ -131,9 +131,7 @@ main {
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
-    /* --- CHANGE START --- */
     order: 2; /* Ensures delorean-info appears after delorean-image */
-    /* --- CHANGE END --- */
 }
 
 .delorean-info h2 {
@@ -156,9 +154,7 @@ main {
 }
 
 .delorean-image {
-    /* --- CHANGE START --- */
     order: 1; /* Ensures delorean-image appears before delorean-info */
-    /* --- CHANGE END --- */
 }
 
 .delorean-image img {
