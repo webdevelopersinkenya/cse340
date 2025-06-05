@@ -1,32 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Include the head partial. This will contain meta tags, title, and CSS link. -->
-    <!-- Assuming partials are in a 'partials' subfolder relative to this file's location. -->
-    <%- include('./partials/head') %>
-</head>
-<body>
-    <!-- The main wrapper div that encompasses all visible page content -->
-    <div id="wrapper">
-        <!-- Include the header partial (CSE Motors logo and My Account link) -->
-        <%- include('./partials/header') %>
+<!-- Welcome Banner for the homepage -->
+<h2 class="welcome-banner">Welcome to CSE Motors!</h2>
 
-        <!-- Include the navigation partial (Home, Custom, Sedan, etc. links) -->
-        <!-- This will appear directly below the header -->
-        <%- include('./partials/navigation') %>
-
+<!-- Featured Vehicle Section (DMC Delorean) -->
+<div class="delorean-section">
+    <!-- Image of the featured vehicle -->
+    <div class="delorean-image">
         <!--
-            The main content area of the page.
-            The `<%- body %>` placeholder is where the specific content for each
-            route (e.g., your Delorean display, upgrades, reviews) will be injected
-            from your Node.js controller (e.g., `res.render('home', { body: someHTML })`).
+            IMPORTANT: Replace 'images/site/dolerean.jpg' with the actual
+            relative path to your Delorean image.
+            Example: If your HTML is in 'public/' and image is in 'public/images/site/',
+            then 'images/site/dolerean.jpg' is correct.
         -->
-        <main>
-            <%- body %>
-        </main>
-
-        <!-- Include the footer partial (copyright information) -->
-        <%- include('./partials/footer') %>
+        <img src="images/site/dolerean.jpg" alt="DMC Delorean Car">
     </div>
-</body>
-</html>
+    <!-- Details and features of the vehicle -->
+    <div class="delorean-info">
+        <h2>DMC Delorean</h2>
+        <ul class="vehicle-features">
+            <li>3 Cup holders</li>
+            <li>Superman doors</li>
+            <li>Fuzzy dice!</li>
+        </ul>
+        <!-- Call to action button -->
+        <button class="own-today-button">Own Today</button>
+    </div>
+</div>
+
+<!-- Container for Upgrades and Reviews sections -->
+<div class="upgrades-reviews-container">
+    <!-- Delorean Upgrades Section -->
+    <section class="delorean-upgrades">
+        <h2>Delorean Upgrades</h2>
+        <div class="upgrade-items-grid">
+            <!-- Individual Upgrade Item: Flux Capacitor -->
+            <div class="upgrade-item">
+                <div class="upgrade-icon-box">
+                    <!-- Ensure this path is correct for your Flux Capacitor image -->
+                    <img src="images/upgrades/flux-cap.png" alt="Flux Capacitor">
+                </div>
+                <p>Flux Capacitor</p>
+            </div>
+            <!-- Individual Upgrade Item: Flame Decals -->
+            <div class="upgrade-item">
+                <div class="upgrade-icon-box">
+                    <!-- Ensure this path is correct for your Flame Decals image -->
+                    <img src="images/upgrades/flame.jpg" alt="Flame Decals">
+                </div>
+                <p>Flame Decals</p>
+            </div>
+            <!-- Individual Upgrade Item: Bumper Stickers -->
+            <div class="upgrade-item">
+                <div class="upgrade-icon-box">
+                    <!-- Ensure this path is correct for your Bumper Stickers image -->
+                    <img src="images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers Icon">
+                </div>
+                <p>Bumper Stickers</p>
+            </div>
+            <!-- Individual Upgrade Item: Hub Caps -->
+            <div class="upgrade-item">
+                <div class="upgrade-icon-box">
+                    <!-- Ensure this path is correct for your Hub Caps image -->
+                    <img src="images/upgrades/hub-cap.png" alt="Hub Caps Icon">
+                </div>
+                <p>Hub Caps</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DMC Delorean Reviews Section -->
+    <section class="delorean-reviews">
+        <h2>DMC Delorean Reviews</h2>
+        <!-- List of customer reviews -->
+        <ul>
+            <li>"So fast it's almost like traveling in time." (4/5)</li>
+            <li>"Coolest ride on the road." (4/5)</li>
+            <li>"I'm feeling McFly!" (5/5)</li>
+            <li>"The most futuristic ride of our day." (4.5/5)</li>
+            <li>"80's livin and I love it!" (5/5)</li>
+        </ul>
+    </section>
+</div>
