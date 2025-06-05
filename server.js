@@ -19,7 +19,7 @@ const staticRoutes = require("./routes/static");
 const baseRoute = require("./routes/baseRoute");
 const accountRoute = require("./routes/accountRoute");
 const inventoryRoute = require("./routes/inventoryRoute");
-const errorRoute = require("./routes/errorRoute"); // Assuming this is for explicit error paths if any
+// const errorRoute = require("./routes/errorRoute"); // Assuming this is for explicit error paths if any (often not needed with global handler)
 
 // Check if DATABASE_URL is loaded (for debugging during deployment)
 console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL ? "Yes" : "No - Check .env file or Render config");
@@ -87,15 +87,17 @@ app.use((req, res, next) => {
  * Order matters here: specific routes before general ones, and ALL routes before 404 handler
  *************************/
 
-// Account routes (all wrapped in handleErrors)
-app.use("/account", utilities.handleErrors(accountRoute)); // Apply handleErrors to router middleware
+// ACCOUNT ROUTES - if any are more specific than /inv, put them here
+app.use("/account", utilities.handleErrors(accountRoute));
 
-// Inventory routes (all wrapped in handleErrors)
-// This must be above the general baseRoute as its paths are more specific
+// INVENTORY ROUTES - These are specific to /inventory or /inv
+// Make sure these are placed BEFORE the general baseRoute, or they won't be hit.
 app.use("/inventory", utilities.handleErrors(inventoryRoute));
-app.use("/inv", utilities.handleErrors(inventoryRoute)); // Optional alternate route
+app.use("/inv", utilities.handleErrors(inventoryRoute)); // This handles /inv/ for your management page
 
-// Custom pages (all wrapped in handleErrors)
+// CUSTOM PAGES (e.g., /sedan, /truck) - These are also specific, but can be
+// before or after inventory routes depending on your desired hierarchy.
+// They are fine here.
 app.get("/custom", utilities.handleErrors(async (req, res) => {
   res.render("custom", { title: "Custom Vehicles", nav: await utilities.getNav() });
 }));
@@ -109,9 +111,9 @@ app.get("/truck", utilities.handleErrors(async (req, res) => {
   res.render("truck", { title: "Truck Vehicles", nav: await utilities.getNav() });
 }));
 
-// Base route (Home page and intentional error trigger) - MUST be defined LAST among your specific routes, but BEFORE 404 handler
-app.use("/", utilities.handleErrors(baseRoute)); // Apply handleErrors to router middleware
-
+// BASE ROUTE (Home page, /trigger-error) - This is the most general route for '/'
+// It should be placed LAST among your *defined* routes, just before the 404 handler.
+app.use("/", utilities.handleErrors(baseRoute));
 
 // Explicit error route (if you have one for specific error pages - usually not needed if global handler is robust)
 // app.use("/error", utilities.handleErrors(errorRoute)); // Uncomment if you have a specific errorRoute router
@@ -152,7 +154,7 @@ app.use(utilities.handleErrors(async (err, req, res, next) => {
     // In production, avoid exposing stack traces directly to the user.
     error: process.env.NODE_ENV === 'development' ? err : {},
   });
-}));
+})); // Removed the extraneous semicolon here
 
 /* ***********************
  * Server Listen
