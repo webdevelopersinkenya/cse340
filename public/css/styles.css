@@ -87,11 +87,6 @@ nav ul li a {
     display: block; /* Make the entire padding area clickable */
 }
 
-nav ul li a.active {
-    /* Style for the active/current page link */
-}
-
-
 nav ul li:hover {
     background-color: #555555;
     border-radius: 5px;
