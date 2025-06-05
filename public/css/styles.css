@@ -37,7 +37,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 55px solid #2e8b57;
+   
 }
 
 header h1 {
@@ -86,11 +86,6 @@ nav ul li a {
     text-decoration: none;
     display: block;
 }
-
-nav ul li a.active {
-    /* Style for the active/current page link */
-}
-
 
 nav ul li:hover {
     background-color: #555555;
@@ -249,7 +244,7 @@ main {
 .upgrade-icon-box {
     width: 60px;
     height: 60px;
-    background-color: #e0f2f7;
+    background-color: #007bff;
     border-radius: 50%;
     display: flex;
     align-items: center;
