@@ -37,7 +37,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-   
+    border-bottom: 55px solid #2e8b57; /* Adjusted from 5px to 55px based on image speculation */
 }
 
 header h1 {
@@ -80,12 +80,17 @@ nav ul li {
     white-space: nowrap;
 }
 
-nav ul li a { /* **UPDATED: Applying color and font-weight to the <a> tags** */
-    color: #ffffff; /* **Ensures navigation text is white** */
-    font-weight: bold; /* **Ensures navigation text is thick/bold** */
+nav ul li a {
+    color: #ffffff; /* Ensures navigation text is white */
+    font-weight: bold; /* Ensures navigation text is thick/bold */
     text-decoration: none; /* Remove underline from links */
     display: block; /* Make the entire padding area clickable */
 }
+
+nav ul li a.active {
+    /* Style for the active/current page link */
+}
+
 
 nav ul li:hover {
     background-color: #555555;
@@ -116,11 +121,13 @@ main {
     gap: 30px;
     margin-top: 30px;
     flex-wrap: wrap;
-    justify-content: center;
+    /* --- CHANGE START --- */
+    justify-content: space-between; /* This will push items to the left and right */
+    /* --- CHANGE END --- */
 }
 
 .delorean-info {
-    max-width: 300px;
+    max-width: 300px; /* Keep max-width, adjust if content overflows */
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
@@ -295,8 +302,9 @@ footer {
     }
 
     .delorean-section {
-        flex-direction: column;
+        flex-direction: column; /* Stack car info and image vertically on small screens */
         text-align: center;
+        justify-content: center; /* Center items when stacked */
     }
 
     .delorean-info {
