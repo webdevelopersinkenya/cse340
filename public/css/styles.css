@@ -118,11 +118,11 @@ main {
 .delorean-section {
     display: flex;
     align-items: center;
-    gap: 30px; /* Provides the "slightly on the right side" spacing */
+    gap: 30px; /* Provides the spacing between elements */
     margin-top: 30px;
     flex-wrap: wrap;
     /* --- CHANGE START --- */
-    justify-content: space-between; /* Pushes delorean-image left and delorean-info right */
+    justify-content: flex-start; /* Aligns delorean-image and delorean-info to the left */
     /* --- CHANGE END --- */
 }
 
@@ -131,7 +131,9 @@ main {
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
-    order: 2; /* Ensures delorean-info appears after delorean-image */
+    /* --- CHANGE START --- */
+    order: 1; /* Ensures delorean-info appears before delorean-image */
+    /* --- CHANGE END --- */
 }
 
 .delorean-info h2 {
@@ -154,7 +156,9 @@ main {
 }
 
 .delorean-image {
-    order: 1; /* Ensures delorean-image appears before delorean-info */
+    /* --- CHANGE START --- */
+    order: 2; /* Ensures delorean-image appears after delorean-info */
+    /* --- CHANGE END --- */
 }
 
 .delorean-image img {
