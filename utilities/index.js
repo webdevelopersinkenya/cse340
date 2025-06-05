@@ -1,4 +1,4 @@
-const pool = require('../database/'); // Path to your PostgreSQL connection pool
+const pool = require('../database/');
 
 /* ***********************
  * General Utilities
@@ -6,38 +6,30 @@ const pool = require('../database/'); // Path to your PostgreSQL connection pool
 
 /**
  * Builds the navigation HTML string from database data or hardcoded values.
- * Adjust the SQL query and table/column names to match your database schema
- * or use the hardcoded option if you don't store nav in the DB.
  * @returns {string} The HTML string for the navigation.
  */
 async function getNav() {
   let navList = '<ul>';
   try {
-    // Option 1: Fetch navigation items from a database table (Recommended for dynamic nav)
-    // IMPORTANT: Replace 'navigation_items', 'name', 'link_path', 'order_column' with your actual DB details.
-    // Ensure this table and data exist in your PostgreSQL database.
     const sql = 'SELECT name, link_path FROM navigation_items ORDER BY order_column ASC';
     const data = await pool.query(sql);
     const navItems = data.rows;
 
-    // Add 'Home' link explicitly, or ensure it's in your DB
-    navList += '<li><a href="/">Home</a></li>';
+    navList += '<li><a href="/">Home</a></li>'; // Always include Home
 
     navItems.forEach((item) => {
-      // Ensure 'active' class is handled by your client-side JS or template logic
       navList += `<li><a href="${item.link_path}">${item.name}</a></li>`;
     });
 
   } catch (error) {
     console.error("Error building navigation:", error.message, error.stack);
-    // Option 2: Hardcode navigation if database query fails or table doesn't exist
-    // This is the fallback if Option 1 causes an error
+    // Fallback to hardcoded navigation if DB query fails or table doesn't exist
     navList += '<li><a href="/">Home</a></li>';
     navList += '<li><a href="/custom">Custom</a></li>';
     navList += '<li><a href="/sedan">Sedan</a></li>';
     navList += '<li><a href="/suv">SUV</a></li>';
     navList += '<li><a href="/truck">Truck</a></li>';
-    console.warn("Using hardcoded navigation due to database error. Please create 'navigation_items' table if dynamic nav is desired.");
+    console.warn("Using hardcoded navigation due to database error or missing 'navigation_items' table.");
   }
   navList += '</ul>';
   return navList;
@@ -45,13 +37,11 @@ async function getNav() {
 
 /**
  * Builds a classification select list (e.g., for vehicle types).
- * Fetches data from the 'classification' table.
  * @param {number} [selectedId] - The ID of the classification to be pre-selected.
  * @returns {string} The HTML string for the select list.
  */
 async function buildClassificationList(selectedId) {
   try {
-    // IMPORTANT: Ensure 'classification' table exists in your PostgreSQL database.
     const sql = 'SELECT classification_id, classification_name FROM classification ORDER BY classification_name ASC';
     const classifications = await pool.query(sql);
     let options = '<select name="classification_id" id="classificationList" required>';
@@ -66,15 +56,54 @@ async function buildClassificationList(selectedId) {
     return options;
   } catch (error) {
     console.error("Error building classification list:", error.message, error.stack);
-    // If the classification table doesn't exist, this error will be caught.
-    // In production, you might want a more graceful fallback than re-throwing.
-    throw error;
+    throw error; // Re-throw to global error handler
   }
 }
 
 /**
+ * Builds the HTML for a single vehicle detail view.
+ * @param {object} vehicleData - The object containing all vehicle details.
+ * @returns {string} The HTML string for the vehicle detail view.
+ */
+async function buildVehicleDetail(vehicleData) {
+    if (!vehicleData) {
+        return '<p class="error-message">Vehicle data is unavailable.</p>';
+    }
+
+    // Format price to USD currency with commas
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0, // No cents if they're always .00
+        maximumFractionDigits: 0, // No cents if they're always .00
+    }).format(vehicleData.inv_price);
+
+    // Format mileage with commas
+    const formattedMileage = new Intl.NumberFormat('en-US').format(vehicleData.inv_miles);
+
+    let detailHtml = `
+        <div class="vehicle-detail-container">
+            <div class="vehicle-detail-image">
+                <img src="${vehicleData.inv_image}" alt="${vehicleData.inv_make} ${vehicleData.inv_model} - Full Image">
+            </div>
+            <div class="vehicle-detail-info">
+                <h1>${vehicleData.inv_make} ${vehicleData.inv_model}</h1>
+                <p class="price"><strong>Price:</strong> ${formattedPrice}</p>
+                
+                <hr>
+                <p><strong>Year:</strong> ${vehicleData.inv_year}</p>
+                <p><strong>Mileage:</strong> ${formattedMileage} miles</p>
+                <p><strong>Color:</strong> ${vehicleData.inv_color}</p>
+                <p><strong>Description:</strong> ${vehicleData.inv_description}</p>
+            </div>
+        </div>
+    `;
+    return detailHtml;
+}
+
+
+/**
  * Higher-order function to wrap async route handlers for centralized error handling.
- * Prevents repetitive try-catch blocks in every controller function.
  * @param {function} fn - The async function to wrap.
  * @returns {function} An Express middleware function.
  */
@@ -84,9 +113,9 @@ function handleErrors(fn) {
   };
 }
 
-// Export all utility functions
 module.exports = {
   getNav,
   buildClassificationList,
-  handleErrors, // <--- This line is essential for exporting handleErrors
+  buildVehicleDetail, // Export the new utility function
+  handleErrors,
 };

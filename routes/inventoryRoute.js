@@ -1,20 +1,17 @@
-const express = require('express')
-const router = express.Router()
-const invController = require('../controllers/invController.js')
+const express = require("express");
+const router = new express.Router();
+const inventoryController = require("../controllers/inventoryController");
+const utilities = require("../utilities/"); // For handleErrors
 
-router.get('/', invController.buildManagementView)
-router.get('/add-classification', invController.buildAddClassificationView)
-router.post(
-  '/add-classification',
-  invController.validateClassification,
-  invController.processAddClassification
-)
+// Route to build inventory by classification view (existing)
+// router.get("/type/:classificationId", utilities.handleErrors(inventoryController.buildByClassificationId));
 
-router.get('/add-inventory', invController.buildAddInventoryView)
-router.post(
-  '/add-inventory',
-  invController.validateInventory,
-  invController.processAddInventory
-)
+/* **************************************
+ * Route to build single inventory item detail view
+ * URL: /inv/detail/:invId
+ * invId will be a number representing the inventory item's ID
+ ***************************************/
+router.get("/detail/:invId", utilities.handleErrors(inventoryController.buildByInvId));
 
-module.exports = router
+
+module.exports = router;

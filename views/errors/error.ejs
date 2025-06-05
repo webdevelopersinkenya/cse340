@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Error</title>
-</head>
-<body>
-  <h1>Oops! Something went wrong.</h1>
-  <p><%= message %></p>
-  <% if (error && error.stack) { %>
-    <pre><%= error.stack %></pre>
-  <% } %>
-</body>
-</html>
+<% /*
+    This view displays error messages (e.g., 404 Not Found, 500 Internal Server Error).
+    It receives 'title', 'message', and 'nav' from the global error handler.
+*/ %>
+
+<div class="error-page-content">
+    <h1><%- title %></h1>
+    <p class="error-message"><%- message %></p>
+    <% if (typeof error !== 'undefined' && Object.keys(error).length > 0) { %>
+        <p class="error-details">Details: <%= JSON.stringify(error, null, 2) %></p>
+    <% } %>
+    <p>We apologize for the inconvenience.</p>
+    <p><a href="/">Return to Home Page</a></p>
+</div>
+
+<!-- Add specific styles for .error-page-content in your styles.css -->
+

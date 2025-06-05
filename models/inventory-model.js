@@ -1,41 +1,22 @@
-// Add new inventory item
-async function addInventoryItem(data) {
-  const {
-    inv_make,
-    inv_model,
-    inv_year,
-    inv_description,
-    inv_price,
-    inv_miles,
-    inv_color,
-    classification_id,
-    inv_image,
-    inv_thumbnail,
-  } = data
+const pool = require("../database");
 
+/* ***************************
+ * Get inventory item by inv_id
+ * Parameterized statement
+ ***************************** */
+async function getInventoryById(inv_id) {
   try {
-    const sql = `INSERT INTO inventory 
-      (inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id, inv_image, inv_thumbnail) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
-    const result = await pool.query(sql, [
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id,
-      inv_image,
-      inv_thumbnail,
-    ])
-    return result
+    const data = await pool.query(
+      "SELECT * FROM inventory WHERE inv_id = $1",
+      [inv_id]
+    );
+    return data.rows[0]; // Return the first (and only) matching row
   } catch (error) {
-    throw error
+    console.error("getInventoryById error: " + error);
+    throw new Error("Failed to get inventory item by ID."); // Re-throw a custom error
   }
 }
 
 module.exports = {
-  addInventoryItem,
-  // other model functions...
-}
+  getInventoryById,
+};
