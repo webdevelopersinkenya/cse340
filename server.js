@@ -26,7 +26,7 @@ console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL ? "Yes" : "No - Che
 
 /* ***********************
  * Create Express App
- *************************/
+ **************************/
 const app = express();
 
 /* ***********************
@@ -87,29 +87,13 @@ app.use((req, res, next) => {
  * Order matters here: specific routes before general ones, and ALL routes before 404 handler
  *************************/
 
-// Route to build inventory by classification view (if needed for nav)
-// Make sure inventoryController.buildByClassificationId exists and works
-// app.get("/inv/type/:classificationId", utilities.handleErrors(inventoryController.buildByClassificationId));
-
 // Account routes (all wrapped in handleErrors)
 app.use("/account", utilities.handleErrors(accountRoute)); // Apply handleErrors to router middleware
 
 // Inventory routes (all wrapped in handleErrors)
+// This must be above the general baseRoute as its paths are more specific
 app.use("/inventory", utilities.handleErrors(inventoryRoute));
 app.use("/inv", utilities.handleErrors(inventoryRoute)); // Optional alternate route
-
-// Sample inventory add page (if this specific route isn't handled by inventoryRoute)
-app.get('/inventory/add', utilities.handleErrors(async (req, res) => {
-  const classificationList = await utilities.buildClassificationList();
-  res.render('inventory/add-inventory', {
-    title: "Add New Inventory",
-    nav: await utilities.getNav(),
-    classificationList: classificationList,
-    inv_make: '', inv_model: '', inv_year: '', inv_price: '',
-    inv_miles: '', inv_color: '', inv_image: '', inv_thumbnail: '',
-    errors: null,
-  });
-}));
 
 // Custom pages (all wrapped in handleErrors)
 app.get("/custom", utilities.handleErrors(async (req, res) => {
@@ -125,12 +109,13 @@ app.get("/truck", utilities.handleErrors(async (req, res) => {
   res.render("truck", { title: "Truck Vehicles", nav: await utilities.getNav() });
 }));
 
-// Base route (Home page) - MUST be defined LAST among your specific routes, but BEFORE 404 handler
+// Base route (Home page and intentional error trigger) - MUST be defined LAST among your specific routes, but BEFORE 404 handler
 app.use("/", utilities.handleErrors(baseRoute)); // Apply handleErrors to router middleware
 
 
 // Explicit error route (if you have one for specific error pages - usually not needed if global handler is robust)
-app.use("/error", utilities.handleErrors(errorRoute)); // Apply handleErrors to router middleware
+// app.use("/error", utilities.handleErrors(errorRoute)); // Uncomment if you have a specific errorRoute router
+
 
 /* ***********************
  * 404 Not Found Handler

@@ -1,4 +1,5 @@
 const pool = require('../database/');
+const inventoryModel = require('../models/inventory-model'); // Import the inventory model
 
 /* ***********************
  * General Utilities
@@ -11,24 +12,27 @@ const pool = require('../database/');
 async function getNav() {
   let navList = '<ul>';
   try {
-    const sql = 'SELECT name, link_path FROM navigation_items ORDER BY order_column ASC';
-    const data = await pool.query(sql);
-    const navItems = data.rows;
+    // Dynamically fetch classifications for navigation
+    const classifications = await inventoryModel.getClassifications(); // Use model to get classifications
+    
+    navList += '<li><a href="/">Home</a></li>'; // Always include Home
 
-    navList += '<li><a href="/">Home</a></li>';
-
-    navItems.forEach((item) => {
-      navList += `<li><a href="${item.link_path}">${item.name}</a></li>`;
+    classifications.forEach((item) => {
+      // Assuming link_path could be dynamically generated or present in DB
+      // For now, based on assignment, we'll construct the path
+      const linkPath = `/inv/type/${item.classification_name}`;
+      navList += `<li><a href="${linkPath}">${item.classification_name}</a></li>`;
     });
 
   } catch (error) {
     console.error("Error building navigation:", error.message, error.stack);
+    // Fallback to hardcoded navigation if DB query fails or table doesn't exist
     navList += '<li><a href="/">Home</a></li>';
-    navList += '<li><a href="/custom">Custom</a></li>';
-    navList += '<li><a href="/sedan">Sedan</a></li>';
-    navList += '<li><a href="/suv">SUV</a></li>';
-    navList += '<li><a href="/truck">Truck</a></li>';
-    console.warn("Using hardcoded navigation due to database error or missing 'navigation_items' table.");
+    navList += '<li><a href="/inv/type/Custom">Custom</a></li>';
+    navList += '<li><a href="/inv/type/Sedan">Sedan</a></li>';
+    navList += '<li><a href="/inv/type/SUV">SUV</a></li>';
+    navList += '<li><a href="/inv/type/Truck">Truck</a></li>';
+    console.warn("Using hardcoded navigation due to database error or missing classification data.");
   }
   navList += '</ul>';
   return navList;
@@ -36,18 +40,18 @@ async function getNav() {
 
 /**
  * Builds a classification select list (e.g., for vehicle types).
+ * Fetches data from the 'classification' table using the inventoryModel.
  * @param {number} [selectedId] - The ID of the classification to be pre-selected.
  * @returns {string} The HTML string for the select list.
  */
-async function buildClassificationList(selectedId) {
+async function buildClassificationList(selectedId = null) { // Default to null for stickiness
   try {
-    const sql = 'SELECT classification_id, classification_name FROM classification ORDER BY classification_name ASC';
-    const classifications = await pool.query(sql);
+    const classifications = await inventoryModel.getClassifications(); // Use model to get classifications
     let options = '<select name="classification_id" id="classificationList" required>';
-    options += '<option value="">Select a Classification</option>';
+    options += '<option value="">Choose a Classification</option>';
 
-    classifications.rows.forEach((row) => {
-      const selected = row.classification_id == selectedId ? 'selected' : '';
+    classifications.forEach((row) => {
+      const selected = (selectedId !== null && row.classification_id == selectedId) ? 'selected' : '';
       options += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
     });
 
@@ -55,12 +59,13 @@ async function buildClassificationList(selectedId) {
     return options;
   } catch (error) {
     console.error("Error building classification list:", error.message, error.stack);
-    throw error;
+    throw new Error("Failed to build classification list for form."); // Propagate error
   }
 }
 
+
 /**
- * Builds the HTML for a single vehicle detail view. (Existing function)
+ * Builds the HTML for a single vehicle detail view.
  * @param {object} vehicleData - The object containing all vehicle details.
  * @returns {string} The HTML string for the vehicle detail view.
  */
@@ -145,7 +150,7 @@ function handleErrors(fn) {
 
 module.exports = {
   getNav,
-  buildClassificationList,
+  buildClassificationList, // Updated for dynamic dropdown
   buildVehicleDetail,
   buildClassificationGrid,
   handleErrors,

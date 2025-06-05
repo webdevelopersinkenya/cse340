@@ -1,21 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title><%= title %></title>
-</head>
-<body>
-  <h1><%= title %></h1>
+<% /*
+    This view serves as the inventory management dashboard.
+    It displays links to add classifications and new inventory items.
+*/ %>
 
-  <% if (message) { %>
-    <p style="color: green;"><%= message %></p>
-  <% } %>
+<% /*
+    The 'title' and 'nav' variables are passed from the controller
+    and used by the main layout.ejs.
+*/ %>
 
-  <nav>
-    <ul>
-      <li><a href="/inv/add-classification">Add New Classification</a></li>
-      <li><a href="/inv/add-inventory">Add New Inventory Item</a></li>
-    </ul>
-  </nav>
-</body>
-</html>
+<div class="management-container">
+    <h1><%= title %></h1>
+
+    <%- messages() %> <%-- Displays flash messages --%>
+
+    <div class="management-links">
+        <p>
+            <a href="/inv/add-classification" title="Add a New Vehicle Classification">Add New Classification</a>
+        </p>
+        <p>
+            <a href="/inv/add-inventory" title="Add a New Vehicle to Inventory">Add New Inventory Item</a>
+        </p>
+    </div>
+
+    <% /*
+        Optional: If you want to show the classification list here too,
+        you can use the 'classificationList' variable passed from the controller.
+    */ %>
+    <% if (typeof classificationList !== 'undefined') { %>
+        <h2>Current Classifications</h2>
+        <div class="classification-list-display">
+            <%- classificationList %> <%-- Renders the classification dropdown/list --%>
+        </div>
+    <% } %>
+</div>
