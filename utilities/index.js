@@ -81,7 +81,7 @@ async function buildVehicleDetail(vehicleData) {
     let detailHtml = `
         <div class="vehicle-detail-container">
             <div class="vehicle-detail-image">
-                <img src="${vehicleData.inv_image}" alt="${vehicleData.inv_make} ${vehicleData.inv_model} - Full Image">
+                <img src="${vehicleData.inv_image}" alt="${vehicleData.inv_make} ${vehicleData.inv_model} - Full Image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/000000?text=Image+Missing';">
             </div>
             <div class="vehicle-detail-info">
                 <h1>${vehicleData.inv_make} ${vehicleData.inv_model}</h1>
@@ -111,7 +111,7 @@ async function buildClassificationGrid(data) {
       grid += `
         <div class="inv-card">
           <a href="/inv/detail/${vehicle.inv_id}" title="View details for ${vehicle.inv_make} ${vehicle.inv_model}">
-            <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+            <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}" onerror="this.onerror=null;this.src='https://placehold.co/280x200/CCCCCC/000000?text=Thumbnail+Missing';">
           </a>
           <div class="inv-card-content">
             <h2>
@@ -147,6 +147,6 @@ module.exports = {
   getNav,
   buildClassificationList,
   buildVehicleDetail,
-  buildClassificationGrid, // Export the new utility function
+  buildClassificationGrid,
   handleErrors,
 };
