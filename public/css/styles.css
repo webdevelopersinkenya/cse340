@@ -81,11 +81,16 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #ffffff; /* Ensures navigation text is white */
-    font-weight: bold; /* Ensures navigation text is thick/bold */
-    text-decoration: none; /* Remove underline from links */
-    display: block; /* Make the entire padding area clickable */
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
 }
+
+nav ul li a.active {
+    /* Style for the active/current page link */
+}
+
 
 nav ul li:hover {
     background-color: #555555;
@@ -113,19 +118,22 @@ main {
 .delorean-section {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 30px; /* Provides the "slightly on the right side" spacing */
     margin-top: 30px;
     flex-wrap: wrap;
     /* --- CHANGE START --- */
-    justify-content: space-between; /* This will push items to the left and right */
+    justify-content: center; /* Centers the delorean-image and delorean-info group */
     /* --- CHANGE END --- */
 }
 
 .delorean-info {
-    max-width: 300px; /* Keep max-width, adjust if content overflows */
+    max-width: 300px;
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
+    /* --- CHANGE START --- */
+    order: 2; /* Ensures delorean-info appears after delorean-image */
+    /* --- CHANGE END --- */
 }
 
 .delorean-info h2 {
@@ -145,6 +153,12 @@ main {
     font-size: 1em;
     margin-bottom: 5px;
     color: #007bff;
+}
+
+.delorean-image {
+    /* --- CHANGE START --- */
+    order: 1; /* Ensures delorean-image appears before delorean-info */
+    /* --- CHANGE END --- */
 }
 
 .delorean-image img {
