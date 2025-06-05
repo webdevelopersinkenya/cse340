@@ -116,12 +116,16 @@ main {
 
 /* Delorean Section (Featured Vehicle) Styling */
 .delorean-section {
-    display: flex;
+    display: flex; /* Keep flex for overall centering */
     align-items: center;
-    gap: 30px; /* Controls the space between the image and info block */
+    gap: 0; /* Remove gap as items will overlap */
     margin-top: 30px;
     flex-wrap: wrap;
-    justify-content: center; /* Centers the delorean-image and delorean-info group */
+    justify-content: center; /* Centers the whole image+info block */
+    /* --- CHANGE START --- */
+    position: relative; /* Set parent to relative for absolute positioning of children */
+    overflow: hidden; /* Ensures content doesn't spill if absolutely positioned items go too far */
+    /* --- CHANGE END --- */
 }
 
 .delorean-info {
@@ -129,9 +133,17 @@ main {
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
-    order: 2; /* Ensures delorean-info appears after delorean-image */
     /* --- CHANGE START --- */
-    text-align: center; /* Centers the text content within .delorean-info */
+    position: absolute; /* Take delorean-info out of normal document flow */
+    bottom: 20px; /* Position from bottom of parent (.delorean-section) */
+    left: 20px; /* Position from left of parent (.delorean-section) */
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent background for readability */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* Ensure it's on top of the image */
+    order: unset; /* Remove order as it's absolutely positioned */
+    text-align: center; /* Keep content centered within the info box */
     /* --- CHANGE END --- */
 }
 
@@ -155,13 +167,17 @@ main {
 }
 
 .delorean-image {
-    order: 1; /* Ensures delorean-image appears before delorean-info */
+    /* --- CHANGE START --- */
+    order: unset; /* Remove order as it's not relevant with absolute positioning of info */
+    /* No absolute positioning for the image itself, let it flow normally */
+    /* This ensures the section height is determined by the image */
+    /* --- CHANGE END --- */
 }
 
 .delorean-image img {
-    max-width: 100%;
-    height: auto;
-    display: block;
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Removes extra space below image */
 }
 
 .own-today-button {
@@ -311,11 +327,19 @@ footer {
         flex-direction: column; /* Stack car info and image vertically on small screens */
         text-align: center;
         justify-content: center; /* Center items when stacked */
+        position: relative; /* Keep relative for containing info block */
+        height: auto; /* Allow height to adjust */
     }
 
     .delorean-info {
         max-width: 100%;
+        /* --- CHANGE START --- */
+        position: static; /* Reset to static on small screens for normal flow */
+        margin: 20px auto; /* Center info block when stacked */
+        background-color: #ffffff; /* Make background solid if preferred when not overlapping */
+        padding: 20px;
         order: unset; /* Remove explicit order for small screens to follow HTML order */
+        /* --- CHANGE END --- */
     }
 
     .delorean-image {
