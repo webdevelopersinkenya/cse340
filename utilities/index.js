@@ -15,7 +15,7 @@ async function getNav() {
     const data = await pool.query(sql);
     const navItems = data.rows;
 
-    navList += '<li><a href="/">Home</a></li>'; // Always include Home
+    navList += '<li><a href="/">Home</a></li>';
 
     navItems.forEach((item) => {
       navList += `<li><a href="${item.link_path}">${item.name}</a></li>`;
@@ -23,7 +23,6 @@ async function getNav() {
 
   } catch (error) {
     console.error("Error building navigation:", error.message, error.stack);
-    // Fallback to hardcoded navigation if DB query fails or table doesn't exist
     navList += '<li><a href="/">Home</a></li>';
     navList += '<li><a href="/custom">Custom</a></li>';
     navList += '<li><a href="/sedan">Sedan</a></li>';
@@ -56,12 +55,12 @@ async function buildClassificationList(selectedId) {
     return options;
   } catch (error) {
     console.error("Error building classification list:", error.message, error.stack);
-    throw error; // Re-throw to global error handler
+    throw error;
   }
 }
 
 /**
- * Builds the HTML for a single vehicle detail view.
+ * Builds the HTML for a single vehicle detail view. (Existing function)
  * @param {object} vehicleData - The object containing all vehicle details.
  * @returns {string} The HTML string for the vehicle detail view.
  */
@@ -70,15 +69,13 @@ async function buildVehicleDetail(vehicleData) {
         return '<p class="error-message">Vehicle data is unavailable.</p>';
     }
 
-    // Format price to USD currency with commas
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 0, // No cents if they're always .00
-        maximumFractionDigits: 0, // No cents if they're always .00
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
     }).format(vehicleData.inv_price);
 
-    // Format mileage with commas
     const formattedMileage = new Intl.NumberFormat('en-US').format(vehicleData.inv_miles);
 
     let detailHtml = `
@@ -101,6 +98,39 @@ async function buildVehicleDetail(vehicleData) {
     return detailHtml;
 }
 
+/**
+ * Builds the HTML grid of inventory items for a classification view.
+ * @param {Array<object>} data - An array of inventory item objects.
+ * @returns {string} The HTML string for the grid.
+ */
+async function buildClassificationGrid(data) {
+  let grid = '';
+  if (data.length > 0) {
+    grid = '<div class="inv-classification-grid">';
+    data.forEach(vehicle => {
+      grid += `
+        <div class="inv-card">
+          <a href="/inv/detail/${vehicle.inv_id}" title="View details for ${vehicle.inv_make} ${vehicle.inv_model}">
+            <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+          </a>
+          <div class="inv-card-content">
+            <h2>
+              <a href="/inv/detail/${vehicle.inv_id}" title="View details for ${vehicle.inv_make} ${vehicle.inv_model}">
+                ${vehicle.inv_make} ${vehicle.inv_model}
+              </a>
+            </h2>
+            <span>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(vehicle.inv_price)}</span>
+          </div>
+        </div>
+      `;
+    });
+    grid += '</div>';
+  } else {
+    grid += '<p class="notice">Sorry, no vehicles matching this classification could be found.</p>';
+  }
+  return grid;
+}
+
 
 /**
  * Higher-order function to wrap async route handlers for centralized error handling.
@@ -116,6 +146,7 @@ function handleErrors(fn) {
 module.exports = {
   getNav,
   buildClassificationList,
-  buildVehicleDetail, // Export the new utility function
+  buildVehicleDetail,
+  buildClassificationGrid, // Export the new utility function
   handleErrors,
 };
