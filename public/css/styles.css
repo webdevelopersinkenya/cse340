@@ -37,7 +37,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 55px solid #2e8b57; /* Adjusted from 5px to 55px based on image speculation */
+    border-bottom: 55px solid #2e8b57;
 }
 
 header h1 {
@@ -118,11 +118,11 @@ main {
 .delorean-section {
     display: flex;
     align-items: center;
-    gap: 30px; /* Provides the spacing between elements */
+    gap: 30px; /* Controls the space between the image and info block */
     margin-top: 30px;
     flex-wrap: wrap;
     /* --- CHANGE START --- */
-    justify-content: flex-start; /* Aligns delorean-image and delorean-info to the left */
+    justify-content: center; /* Centers the delorean-image and delorean-info group */
     /* --- CHANGE END --- */
 }
 
@@ -132,7 +132,7 @@ main {
     font-size: 1.2em;
     line-height: 1.5;
     /* --- CHANGE START --- */
-    order: 1; /* Ensures delorean-info appears before delorean-image */
+    order: 2; /* Ensures delorean-info appears after delorean-image */
     /* --- CHANGE END --- */
 }
 
@@ -157,7 +157,7 @@ main {
 
 .delorean-image {
     /* --- CHANGE START --- */
-    order: 2; /* Ensures delorean-image appears after delorean-info */
+    order: 1; /* Ensures delorean-image appears before delorean-info */
     /* --- CHANGE END --- */
 }
 
@@ -318,6 +318,13 @@ footer {
 
     .delorean-info {
         max-width: 100%;
+        /* On small screens, keep order default or reset it if needed for stacking */
+        order: unset; /* Remove explicit order for small screens to follow HTML order */
+    }
+
+    .delorean-image {
+        /* On small screens, keep order default or reset it if needed for stacking */
+        order: unset; /* Remove explicit order for small screens to follow HTML order */
     }
 
     .upgrades-reviews-container {
