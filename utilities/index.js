@@ -1,4 +1,4 @@
-const pool = require('../database/index.js'); // Assuming this path is correct for your database connection
+const pool = require('../database/index.js'); // Keep this line, though it won't be used for getNav in this option
 
 // Build classification select list with optional selected id
 async function buildClassificationList(selectedId) {
@@ -16,45 +16,31 @@ async function buildClassificationList(selectedId) {
     options += '</select>';
     return options;
   } catch (error) {
-    console.error("Error building classification list:", error); // Log the error
-    throw error; // Re-throw the error for upstream handling
+    console.error("Error building classification list:", error);
+    throw error;
   }
 }
 
 /**
- * Builds the navigation HTML string from database data.
- * This is a placeholder; you'll need to fetch actual navigation items from your DB.
- * For example, if you have a 'navigation' table with 'name' and 'url' columns.
+ * Builds the navigation HTML string with hardcoded values.
+ * This is a quick fix if you don't want to use a database table for navigation.
  * @returns {string} The HTML string for the navigation.
  */
 async function getNav() {
-  try {
-    // You would typically fetch navigation items from a database table here.
-    // For demonstration, let's assume a table named 'navigation_items'
-    // with columns 'name' and 'link_path'.
-    const sql = 'SELECT name, link_path FROM navigation_items ORDER BY order_column ASC'; // Adjust table/column names as per your DB schema
-    const data = await pool.query(sql);
-    const navItems = data.rows;
+  // Hardcoding navigation items directly
+  let navList = '<ul>';
+  navList += '<li><a href="/">Home</a></li>';
+  navList += '<li><a href="/custom">Custom</a></li>';
+  navList += '<li><a href="/sedan">Sedan</a></li>';
+  navList += '<li><a href="/suv">SUV</a></li>';
+  navList += '<li><a href="/truck">Truck</a></li>';
+  navList += '</ul>';
 
-    let navList = '<ul>';
-    navList += '<li><a href="/">Home</a></li>'; // Always include Home, or fetch it
-
-    navItems.forEach((item) => {
-      navList += `<li><a href="${item.link_path}">${item.name}</a></li>`;
-    });
-    navList += '</ul>';
-
-    return navList;
-  } catch (error) {
-    console.error("Error building navigation:", error); // Log the error
-    // Return a default or empty navigation list in case of error
-    return '<ul><li><a href="/">Home</a></li></ul>';
-  }
+  return navList; // No try/catch needed here as no database call is made
 }
 
-
-// Export both functions so they can be used by other modules
+// Export both functions
 module.exports = {
   buildClassificationList,
-  getNav, // <--- IMPORTANT: Export the new getNav function
+  getNav,
 };
