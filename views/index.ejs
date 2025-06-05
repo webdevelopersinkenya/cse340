@@ -4,87 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSE Motors - Home</title>
+    <!-- Google Fonts for Montserrat and Open Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    </head>
+    <!-- Link to your main stylesheet -->
+    <!-- Ensure this path is correct relative to your HTML file -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
 <body>
-    <!-- Header Partial -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">CSE Motors</div>
-        </div>
-    </header>
+    <!-- The main wrapper div for the entire page content -->
+    <div id="wrapper">
+        <!-- HEADER Section -->
+        <header>
+            <!-- Website Logo/Title -->
+            <h1>CSE Motors</h1>
+            <!-- User Account Link -->
+            <a href="#" class="account-link">My Account</a>
+        </header>
 
-    <!-- Navigation Partial -->
-    <nav>
-        <div class="container nav-container">
-            <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Custom</a></li>
-                <li><a href="#">Sedan</a></li>
-                <li><a href="#">SUV</a></li>
-                <li><a href="#">Truck</a></li>
+        <!-- NAVIGATION Section -->
+        <nav>
+            <!-- List of navigation links -->
+            <ul>
+                <li>Home</li>
+                <li>Custom</li>
+                <li>Sedan</li>
+                <li>SUV</li>
+                <li>Truck</li>
             </ul>
-        </div>
-    </nav>
-    <main>
-    <!-- Banner Section -->
-    <!-- Changed h1 to h2 and added 'welcome-banner' class for consistent styling with previous CSS -->
-    <h2 class="welcome-banner">Welcome to CSE Motors!</h2>
-    <div class="delorean-section">
-        <!-- Vehicle Image -->
-        <div class="delorean-image">
-            <!-- Updated src to a placeholder for demonstration. Replace with your actual image path. -->
-            <img src=" images/site/dolerean.jpg" alt="DMC Delorean Car">
-        </div>
-        <!-- Vehicle Details -->
-        <div class="delorean-info">
-            <h2>DMC Delorean</h2>
-            <!-- Changed class to 'vehicle-features' for clearer semantic meaning, but styling will apply from .delorean-info ul -->
-            <ul class="vehicle-features">
-                <li>3 Cup holders</li>
-                <li>Superman doors</li>
-                <li>Fuzzy dice!</li>
-            </ul>
-            <!-- Changed class to 'own-today-button' to match existing CSS for button styling -->
-            <button class="own-today-button">Own Today</button>
-        </div>
-    </div>
-</main>
+        </nav>
 
-        </section> 
-       
+        <!-- MAIN Content Section -->
         <main>
+            <!-- Welcome Banner for the homepage -->
+            <h2 class="welcome-banner">Welcome to CSE Motors!</h2>
+
+            <!-- Featured Vehicle Section (DMC Delorean) -->
+            <div class="delorean-section">
+                <!-- Image of the featured vehicle -->
+                <div class="delorean-image">
+                    <!--
+                        IMPORTANT: Replace 'images/site/dolerean.jpg' with the actual
+                        relative path to your Delorean image.
+                        Example: If your HTML is in 'public/' and image is in 'public/images/site/',
+                        then 'images/site/dolerean.jpg' is correct.
+                    -->
+                    <img src="images/site/dolerean.jpg" alt="DMC Delorean Car">
+                </div>
+                <!-- Details and features of the vehicle -->
+                <div class="delorean-info">
+                    <h2>DMC Delorean</h2>
+                    <ul class="vehicle-features">
+                        <li>3 Cup holders</li>
+                        <li>Superman doors</li>
+                        <li>Fuzzy dice!</li>
+                    </ul>
+                    <!-- Call to action button -->
+                    <button class="own-today-button">Own Today</button>
+                </div>
+            </div>
+
+            <!-- Container for Upgrades and Reviews sections -->
             <div class="upgrades-reviews-container">
                 <!-- Delorean Upgrades Section -->
                 <section class="delorean-upgrades">
                     <h2>Delorean Upgrades</h2>
                     <div class="upgrade-items-grid">
+                        <!-- Individual Upgrade Item: Flux Capacitor -->
                         <div class="upgrade-item">
                             <div class="upgrade-icon-box">
-                                <!-- Flux Capacitor Icon (Example SVG) -->
-                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                 <img src=" images/upgrades/flux-cap.png" alt="flux-cap">
+                                <!-- Ensure this path is correct for your Flux Capacitor image -->
+                                <img src="images/upgrades/flux-cap.png" alt="Flux Capacitor">
                             </div>
                             <p>Flux Capacitor</p>
                         </div>
+                        <!-- Individual Upgrade Item: Flame Decals -->
                         <div class="upgrade-item">
                             <div class="upgrade-icon-box">
-                                <!-- Flame Decals Icon (Example SVG) -->
-                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ff4500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.126-1.577-4.515-1.438-6C9.356 2.386 10.293 1 12 1c1.707 0 2.644 1.386 2.438 3.5-0.139 1.485 0.366 3.874 1.432 6 0.512 1 1 1.62 1 3a2.5 2.5 0 0 0 2.5 2.5V21a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5A2.5 2.5 0 0 0 5.5 14.5z"/></svg>
-                                 <img src=" images/upgrades/flame.jpg" alt=" flame">
+                                <!-- Ensure this path is correct for your Flame Decals image -->
+                                <img src="images/upgrades/flame.jpg" alt="Flame Decals">
                             </div>
                             <p>Flame Decals</p>
                         </div>
+                        <!-- Individual Upgrade Item: Bumper Stickers -->
                         <div class="upgrade-item">
                             <div class="upgrade-icon-box">
-                                <!-- Bumper Stickers Icon (Placeholder Image) -->
-                                <img src=" images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers Icon">
+                                <!-- Ensure this path is correct for your Bumper Stickers image -->
+                                <img src="images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers Icon">
                             </div>
                             <p>Bumper Stickers</p>
                         </div>
+                        <!-- Individual Upgrade Item: Hub Caps -->
                         <div class="upgrade-item">
                             <div class="upgrade-icon-box">
-                                <!-- Hub Caps Icon (Placeholder Image) -->
+                                <!-- Ensure this path is correct for your Hub Caps image -->
                                 <img src="images/upgrades/hub-cap.png" alt="Hub Caps Icon">
                             </div>
                             <p>Hub Caps</p>
@@ -95,6 +107,7 @@
                 <!-- DMC Delorean Reviews Section -->
                 <section class="delorean-reviews">
                     <h2>DMC Delorean Reviews</h2>
+                    <!-- List of customer reviews -->
                     <ul>
                         <li>"So fast it's almost like traveling in time." (4/5)</li>
                         <li>"Coolest ride on the road." (4/5)</li>
@@ -108,8 +121,9 @@
 
         <!-- FOOTER Section -->
         <footer>
+            <!-- Copyright information -->
             <p>&copy; 2023, CSE 340 App</p>
         </footer>
-    </div> <!-- This closes the #wrapper div -->
+    </div> <!-- End of #wrapper div -->
 </body>
 </html>

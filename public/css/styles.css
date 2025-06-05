@@ -1,12 +1,12 @@
 /* General Body Styles */
 body {
-    font-family: Arial, sans-serif; /* A common sans-serif font, adjust if you prefer 'Inter' or another */
+    /* Assuming Montserrat and Open Sans are the desired fonts. */
+    /* Ensure these are linked in your HTML <head> as you provided. */
+    font-family: 'Open Sans', Arial, sans-serif;
     margin: 0;
     padding: 0;
     /* Background image for the body - adjust path as needed */
-    background-image: url('../images/site/checkerboard.jpg'); /* Relative path, common if styles.css is in a 'css' folder */
-    /* Fallback/Placeholder if image path is incorrect or for testing */
-    /* background-image: url('https://placehold.co/60x60/f0f0f0/cccccc?text='); */
+    background-image: url('../images/site/checkerboard.jpg'); /* Common if styles.css is in a 'css' folder */
     background-size: 30px 30px; /* Size of each checker square in the pattern */
     background-repeat: repeat; /* Repeat the pattern across the background */
     background-color: #f0f0f0; /* Fallback background color if image fails to load */
@@ -43,13 +43,15 @@ header {
     border-bottom: 5px solid #2e8b57; /* Green accent border at the bottom */
 }
 
-header h1 {
+header h1 { /* Style for "CSE Motors" logo text */
     margin: 0; /* Remove default margin */
     font-size: 2em; /* Larger font size for the main title */
     color: #ffffff; /* Explicitly white for "CSE Motors" */
+    font-family: 'Montserrat', sans-serif; /* Using Montserrat for headings */
+    font-weight: 700; /* Bold Montserrat */
 }
 
-header .account-link {
+header .account-link { /* Style for "My Account" link */
     color: #ffffff; /* "My Account" link color set to white */
     text-decoration: none; /* Remove underline from link */
     font-size: 0.9em; /* Slightly smaller font size */
@@ -66,7 +68,7 @@ nav {
     padding: 10px 20px;
 }
 
-nav ul {
+nav ul { /* Styles for the <ul> within <nav> */
     list-style: none; /* Remove bullet points */
     margin: 0; /* Remove default margin */
     padding: 0; /* Remove default padding */
@@ -74,7 +76,7 @@ nav ul {
     justify-content: space-around; /* Distributes navigation items evenly across the space */
 }
 
-nav ul li {
+nav ul li { /* Styles for each <li> in the navigation */
     padding: 8px 15px; /* Padding inside each navigation item */
     color: #ffffff; /* White text for navigation items */
     font-weight: bold; /* Bold text for navigation items */
@@ -95,13 +97,14 @@ main {
 }
 
 /* Welcome Banner Styling */
-.welcome-banner {
+.welcome-banner { /* Style for "Welcome to CSE Motors!" */
     font-size: 1.8em;
     font-weight: bold;
     color: #333333;
     margin-bottom: 20px;
     border-bottom: 1px solid #eeeeee; /* Light separator line */
     padding-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; /* Using Montserrat for headings */
 }
 
 /* Delorean Section (Featured Vehicle) Styling */
@@ -114,40 +117,39 @@ main {
     justify-content: center; /* Centers items horizontally when wrapped */
 }
 
-.delorean-info {
+.delorean-info { /* Styling for the text details of the Delorean */
     max-width: 300px; /* Limits the width of the text block */
     color: #007bff; /* Blue color for Delorean text */
     font-size: 1.2em;
     line-height: 1.5; /* Spacing between lines of text */
 }
 
-.delorean-info h2 {
+.delorean-info h2 { /* Style for "DMC Delorean" heading */
     font-size: 1.8em;
     margin-bottom: 10px;
     color: #007bff; /* Ensure heading is also blue */
+    font-family: 'Montserrat', sans-serif; /* Using Montserrat for headings */
 }
 
-/* Styling for the ul and li inside delorean-info */
-.delorean-info ul {
+.delorean-info ul { /* Styling for the feature list */
     list-style: none; /* Remove default bullet points */
     padding: 0;
     margin: 0 0 15px 0; /* Add some bottom margin */
 }
 
-.delorean-info ul li {
+.delorean-info ul li { /* Styling for each feature item */
     font-size: 1em; /* Ensure list items have appropriate size */
     margin-bottom: 5px; /* Space between list items */
     color: #007bff; /* Ensure list items are blue */
 }
 
-
-.delorean-image img {
+.delorean-image img { /* Styling for the Delorean car image */
     max-width: 100%; /* Ensures image is responsive */
     height: auto; /* Maintains aspect ratio */
     display: block; /* Removes extra space below image */
 }
 
-.own-today-button {
+.own-today-button { /* Styling for the "Own Today" button */
     background-color: #007bff; /* Blue button background */
     color: white; /* White text on button */
     padding: 12px 25px;
@@ -164,59 +166,60 @@ main {
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Container for Upgrades and Reviews */
+/* Container for Upgrades and Reviews to sit side-by-side */
 .upgrades-reviews-container {
     display: flex;
-    gap: 40px;
+    gap: 40px; /* Space between the two sections */
     margin-top: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: wrap; /* Allow sections to stack on smaller screens */
+    justify-content: center; /* Center items when wrapped */
 }
 
-/* Delorean Upgrades Section */
+/* Delorean Upgrades Section and Reviews Section (shared styles) */
 .delorean-upgrades, .delorean-reviews {
-    flex: 1;
-    min-width: 300px;
+    flex: 1; /* Allows both sections to grow and shrink */
+    min-width: 300px; /* Minimum width before wrapping to ensure readability */
 }
 
 .delorean-upgrades h2, .delorean-reviews h2 {
-    font-size: 1.5em;
+    font-size: 1.5em; /* Adjusted to match image */
     color: #333333;
     margin-bottom: 15px;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee; /* Subtle separator */
     padding-bottom: 5px;
+    font-family: 'Montserrat', sans-serif; /* Using Montserrat for headings */
 }
 
-.upgrade-items-grid {
+.upgrade-items-grid { /* Grid for individual upgrade items */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid for upgrade items */
+    gap: 20px; /* Space between grid items */
     margin-top: 20px;
     text-align: center;
 }
 
-.upgrade-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+.upgrade-item { /* Styling for each individual upgrade box */
+    background-color: #f9f9f9; /* Light background for each item */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
     padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    transition: transform 0.2s ease; /* Smooth lift effect on hover */
 }
 
 .upgrade-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* Lift effect on hover */
 }
 
-.upgrade-icon-box {
+.upgrade-icon-box { /* Circular background for the upgrade icons/images */
     width: 60px;
     height: 60px;
-    background-color: #e0f2f7;
-    border-radius: 50%;
+    background-color: #e0f2f7; /* Light blue background for icons */
+    border-radius: 50%; /* Circular background */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -224,12 +227,13 @@ main {
 }
 
 .upgrade-icon-box img,
-.upgrade-icon-box svg {
+.upgrade-icon-box svg { /* Styling for the actual icon/image inside the circle */
     width: 40px;
     height: 40px;
+    object-fit: contain; /* Ensures image fits within the box */
 }
 
-.upgrade-item p {
+.upgrade-item p { /* Text label for upgrade items */
     font-weight: bold;
     color: #555;
     margin: 0;
@@ -237,64 +241,64 @@ main {
 }
 
 /* Delorean Reviews Section */
-.delorean-reviews ul {
-    list-style: none;
+.delorean-reviews ul { /* List of reviews */
+    list-style: none; /* Remove bullet points */
     padding: 0;
     margin: 0;
 }
 
-.delorean-reviews ul li {
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-left: 5px solid #2e8b57;
+.delorean-reviews ul li { /* Each review item */
+    background-color: #f9f9f9; /* Light background for each review item */
+    border: 1px solid #eee; /* Light border */
+    border-left: 5px solid #2e8b57; /* Green accent bar on the left */
     padding: 10px 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    margin-bottom: 10px; /* Space between reviews */
+    border-radius: 5px; /* Rounded corners */
     font-size: 0.95em;
     color: #555;
 }
 
 /* Footer Section */
 footer {
-    background-color: #333333;
-    color: #ffffff;
+    background-color: #333333; /* Dark background, similar to header */
+    color: #ffffff; /* White text */
     padding: 15px 20px;
     text-align: center;
     font-size: 0.9em;
-    border-top: 5px solid #2e8b57;
-    margin-top: auto;
+    border-top: 5px solid #2e8b57; /* Green accent border at the top */
+    margin-top: auto; /* Pushes the footer to the bottom of the wrapper */
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
     #wrapper {
-        width: 95%;
+        width: 95%; /* Make wrapper slightly wider on small screens */
         margin: 10px auto;
     }
 
     header {
-        flex-direction: column;
+        flex-direction: column; /* Stack header items vertically */
         text-align: center;
-        gap: 10px;
+        gap: 10px; /* Space between title and account link */
     }
 
     nav ul {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column; /* Stack navigation items vertically */
+        align-items: center; /* Center navigation items */
     }
 
     nav ul li {
-        width: 100%;
+        width: 100%; /* Make list items full width */
         text-align: center;
     }
 
     .delorean-section {
-        flex-direction: column;
+        flex-direction: column; /* Stack car info and image vertically */
         text-align: center;
     }
 
     .delorean-info {
-        max-width: 100%;
+        max-width: 100%; /* Allow info block to take full width */
     }
 
     .upgrades-reviews-container {
@@ -305,6 +309,6 @@ footer {
 
 @media (max-width: 480px) {
     .upgrade-items-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column for upgrade items */
     }
 }
