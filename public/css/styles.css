@@ -121,9 +121,7 @@ main {
     gap: 30px; /* Controls the space between the image and info block */
     margin-top: 30px;
     flex-wrap: wrap;
-    /* --- CHANGE START --- */
     justify-content: center; /* Centers the delorean-image and delorean-info group */
-    /* --- CHANGE END --- */
 }
 
 .delorean-info {
@@ -131,8 +129,9 @@ main {
     color: #007bff;
     font-size: 1.2em;
     line-height: 1.5;
-    /* --- CHANGE START --- */
     order: 2; /* Ensures delorean-info appears after delorean-image */
+    /* --- CHANGE START --- */
+    text-align: center; /* Centers the text content within .delorean-info */
     /* --- CHANGE END --- */
 }
 
@@ -156,9 +155,7 @@ main {
 }
 
 .delorean-image {
-    /* --- CHANGE START --- */
     order: 1; /* Ensures delorean-image appears before delorean-info */
-    /* --- CHANGE END --- */
 }
 
 .delorean-image img {
@@ -318,12 +315,10 @@ footer {
 
     .delorean-info {
         max-width: 100%;
-        /* On small screens, keep order default or reset it if needed for stacking */
         order: unset; /* Remove explicit order for small screens to follow HTML order */
     }
 
     .delorean-image {
-        /* On small screens, keep order default or reset it if needed for stacking */
         order: unset; /* Remove explicit order for small screens to follow HTML order */
     }
 
