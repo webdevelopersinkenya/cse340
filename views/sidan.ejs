@@ -1,5 +1,36 @@
-<div class="vehicle-image-section">
-    <h2>Featured Vehicle</h2>
-    <img src="/images/vehicles/mystery-van-tn.jpg" alt="Description of vehicle" class="vehicle-image">
-  </div>
-  
+<% /*
+     File represents the content for the Sedan Vehicles page.
+    It will be injected into the <main><%- body %></main> section of your layout.ejs.
+*/ %>
+
+<h1>Sedan Vehicles</h1>
+<p>Details about our Sedan models will go here.</p>
+<p>This page demonstrates successful routing and view rendering for the /sedan path.</p>
+
+<section class="vehicle-listing">
+    <h2>Our Top Sedan Picks</h2>
+    <div class="grid-container">
+        <div class="vehicle-card">
+            <img src="/images/vehicles/sedan1.jpg" alt="Luxury Sedan">
+            <h3>Luxury Sedan</h3>
+            <p>Experience elegance and performance.</p>
+            <p class="price">$45,000</p>
+        </div>
+        <div class="vehicle-card">
+            <img src="/images/vehicles/sedan2.jpg" alt="Sport Sedan">
+            <h3>Sport Sedan</h3>
+            <p>Agile handling and thrilling acceleration.</p>
+            <p class="price">$38,000</p>
+        </div>
+        <div class="vehicle-card">
+            <img src="/images/vehicles/sedan3.jpg" alt="Compact Sedan">
+            <h3>Compact Sedan</h3>
+            <p>Efficient and city-friendly.</p>
+            <p class="price">$25,000</p>
+        </div>
+        <!-- Add more sedan cards as needed -->
+    </div>
+</section>
+
+<!-- You might also want to add some CSS to style this content. -->
+<!-- For example, add styles for .vehicle-listing, .grid-container, .vehicle-card -->
