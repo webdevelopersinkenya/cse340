@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+</head>
+<body>
+  <h1><%= title %></h1>
+
+  <% if (message) { %>
+    <p style="color: green;"><%= message %></p>
+  <% } %>
+
+  <% if (errors && errors.length > 0) { %>
+    <ul style="color: red;">
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form method="POST" action="/inv/add-inventory" novalidate>
+    <label for="classificationList">Classification:</label>
+    <%- classificationList %>
+
+    <label for="inv_make">Make:</label>
+    <input type="text" id="inv_make" name="inv_make" required value="<%= inv_make %>"/>
+
+    <label for="inv_model">Model:</label>
+    <input type="text" id="inv_model" name="inv_model" required value="<%= inv_model %>"/>
+
+    <label for="inv_year">Year:</label>
+    <input type="number" id="inv_year" name="inv_year" required value="<%= inv_year %>" min="1900" max="2100"/>
+
+    <label for="inv_description">Description:</label>
+    <textarea id="inv_description" name="inv_description" required><%= inv_description %></textarea>
+
+    <label for="inv_price">Price:</label>
+    <input type="number" id="inv_price" name="inv_price" required min="0" step="0.01" value="<%= inv_price %>"/>
+
+    <label for="inv_miles">Miles:</label>
+    <input type="number" id="inv_miles" name="inv_miles" required min="0" value="<%= inv_miles %>"/>
+
+    <label for="inv_color">Color:</label>
+    <input type="text" id="inv_color" name="inv_color" required value="<%= inv_color %>"/>
+
+    <label for="inv_image">Image URL:</label>
+    <input type="text" id="inv_image" name="inv_image" value="<%= inv_image %>"/>
+
+    <label for="inv_thumbnail">Thumbnail URL:</label>
+    <input type="text" id="inv_thumbnail" name="inv_thumbnail" value="<%= inv_thumbnail %>"/>
+
+    <button type="submit">Add Inventory</button>
+  </form>
+</body>
+</html>

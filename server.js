@@ -1,7 +1,7 @@
 /******************************************
  * This server.js file is the primary file of the 
  * application. It is used to control the project.
- *******************************************/
+ ******************************************/
 
 /* ***********************
  * Require Statements
@@ -11,14 +11,16 @@ const session = require("express-session");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
+const { buildClassificationList } = require('./utilities/index');
+const pool = require("./database");  // PostgreSQL connection pool
 
-const pool = require("./database");  // Import the pool here
-
+// Route Imports
 const staticRoutes = require("./routes/static");
 const baseRoute = require("./routes/baseRoute");
 const accountRoute = require("./routes/accountRoute");
 const inventoryRoute = require("./routes/inventoryRoute");
 const errorRoute = require("./routes/errorRoute");
+const { body, validationResult } = require('express-validator');
 
 console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL);
 
@@ -45,16 +47,21 @@ app.use(express.static(path.join(__dirname, "public")));
  *************************/
 app.use(session({
   store: new (require("connect-pg-simple")(session))({
-    pool: pool,                    // Use pool object here
+    pool: pool,
     createTableIfMissing: true,
   }),
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || "defaultSecret",
   resave: true,
   saveUninitialized: true,
   name: "sessionId",
 }));
 
-// Express Messages Middleware
+/* ***********************
+ * Middleware
+ *************************/
+app.use(express.urlencoded({ extended: false }));
+
+// Flash Messages Middleware
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res);
@@ -65,11 +72,26 @@ app.use((req, res, next) => {
  * Routes
  *************************/
 app.use(staticRoutes);
-
 app.use("/", baseRoute);
 app.use("/account", accountRoute);
 app.use("/inventory", inventoryRoute);
 app.use("/inv", inventoryRoute); // Optional alternate route
+
+// Sample inventory add page (move to a controller in the future)
+app.get('/inventory/add', async (req, res) => {
+  const classificationList = await buildClassificationList();
+  res.render('add-inventory', {
+    classificationList,
+    inv_make: '',
+    inv_model: '',
+    inv_year: '',
+    inv_price: '',
+    inv_miles: '',
+    inv_color: '',
+    inv_image: '',
+    inv_thumbnail: '',
+  });
+});
 
 // Custom pages
 app.get("/custom", (req, res) => {
@@ -91,7 +113,6 @@ app.use("/error", errorRoute);
 /* ***********************
  * 404 and Global Error Handlers
  *************************/
-
 // 404 handler
 app.use((req, res, next) => {
   const error = new Error("Page not found");
@@ -102,8 +123,7 @@ app.use((req, res, next) => {
 // Global error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
-  res.status(status);
-  res.render("errors/error", {
+  res.status(status).render("errors/error", {
     title: `${status} Error`,
     message: err.message,
     error: err,

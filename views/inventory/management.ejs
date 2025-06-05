@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Inventory Management</title>
+  <title><%= title %></title>
 </head>
 <body>
-  <h1>Inventory Management</h1>
-  <% if (messages && messages.length) { %>
-    <div>
-      <% messages.forEach(msg => { %>
-        <p><%= msg %></p>
-      <% }); %>
-    </div>
+  <h1><%= title %></h1>
+
+  <% if (message) { %>
+    <p style="color: green;"><%= message %></p>
   <% } %>
 
-  <a href="/inv/add-classification">Add New Classification</a>
-  <br />
-  <a href="/inv/add-inventory">Add New Inventory</a>
+  <nav>
+    <ul>
+      <li><a href="/inv/add-classification">Add New Classification</a></li>
+      <li><a href="/inv/add-inventory">Add New Inventory Item</a></li>
+    </ul>
+  </nav>
 </body>
 </html>

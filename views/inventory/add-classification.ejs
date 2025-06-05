@@ -2,21 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Add Classification</title>
+  <title><%= title %></title>
 </head>
 <body>
-  <h1>Add New Classification</h1>
-  <% if (errors && errors.length) { %>
-    <div>
-      <% errors.forEach(error => { %>
-        <p style="color: red;"><%= error.msg %></p>
-      <% }); %>
-    </div>
+  <h1><%= title %></h1>
+
+  <% if (message) { %>
+    <p style="color: green;"><%= message %></p>
   <% } %>
 
-  <form action="/inv/add-classification" method="post">
-    <label for="classification_name">Classification Name (no spaces or special chars):</label>
-    <input type="text" name="classification_name" id="classification_name" pattern="[A-Za-z0-9]+" required />
+  <% if (errors && errors.length > 0) { %>
+    <ul style="color: red;">
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form method="POST" action="/inv/add-classification" novalidate>
+    <label for="classification_name">Classification Name:</label>
+    <input 
+      type="text" 
+      id="classification_name" 
+      name="classification_name" 
+      value="<%= classification_name %>" 
+      pattern="[A-Za-z0-9]+" 
+      title="No spaces or special characters allowed" 
+      required 
+    />
     <button type="submit">Add Classification</button>
   </form>
 </body>

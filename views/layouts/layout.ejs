@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head') %>
-    <title><%= title || 'CSE Motors' %></title>
-  </head>
-  <body>
+<%- include('../partials/head') %>
+<body>
     <div id="wrapper">
-      <%- include('../partials/header') %>
-      <%- include('../partials/navigation') %>
-
-      <main>
-        <%- body %>
-      </main>
-
-      <%- include('../partials/footer') %>
+        <%- include('../partials/header') %>
+        <%- include('../partials/navigation') %>
+        <main>
+            <%- body %>
+        </main>
+        <%- include('../partials/footer') %>
     </div>
-  </body>
+</body>
 </html>
-
