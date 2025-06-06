@@ -90,22 +90,24 @@ app.use(cookieParser()); // ADD THIS LINE: Apply cookie-parser middleware
 app.use(utilities.checkJWTToken); // ADD THIS LINE: Apply JWT token validation middleware (defined in utilities/index.js)
 
 
+// ... (previous require statements and middleware) ...
+
 /* ***********************
  * Routes
  * Order matters here: specific routes before general ones, and ALL routes before 404 handler
  *************************/
 
-// ACCOUNT ROUTES - if any are more specific than /inv, put them here
+// 1. ACCOUNT ROUTES (e.g., /account/login, /account/register, /account/)
+// These should generally come first if they are specific prefixes.
 app.use("/account", utilities.handleErrors(accountRoute));
 
-// INVENTORY ROUTES - These are specific to /inventory or /inv
-// Make sure these are placed BEFORE the general baseRoute, or they won't be hit.
+// 2. INVENTORY ROUTES (e.g., /inv/, /inv/add-classification, /inv/detail/:id, etc.)
+// THESE MUST BE BEFORE THE BASE ROUTE "/"
 app.use("/inventory", utilities.handleErrors(inventoryRoute));
-app.use("/inv", utilities.handleErrors(inventoryRoute)); // This handles /inv/ for your management page
+app.use("/inv", utilities.handleErrors(inventoryRoute)); // This line specifically mounts the inventory router at /inv
 
-// CUSTOM PAGES (e.g., /sedan, /truck) - These are also specific, but can be
-// before or after inventory routes depending on your desired hierarchy.
-// They are fine here.
+// 3. OTHER SPECIFIC PAGES (e.g., /custom, /sedan, /suv, /truck)
+// These are also specific GET requests, and are fine here.
 app.get("/custom", utilities.handleErrors(async (req, res) => {
   res.render("custom", { title: "Custom Vehicles", nav: await utilities.getNav() });
 }));
@@ -119,13 +121,13 @@ app.get("/truck", utilities.handleErrors(async (req, res) => {
   res.render("truck", { title: "Truck Vehicles", nav: await utilities.getNav() });
 }));
 
-// BASE ROUTE (Home page, /trigger-error) - This is the most general route for '/'
-// It should be placed LAST among your *defined* routes, just before the 404 handler.
+// 4. BASE ROUTE (Home page, /trigger-error)
+// This is the most general route for '/', and it must come LAST among your defined routes.
+// If it's above /inv, it will catch requests like /inv/ before /inv does.
 app.use("/", utilities.handleErrors(baseRoute));
 
-// Explicit error route (if you have one for specific error pages - usually not needed if global handler is robust)
-// app.use("/error", utilities.handleErrors(errorRoute)); // Uncomment if you have a specific errorRoute router
-
+// ... (Explicit error route, if you have one and want to enable it) ...
+// app.use("/error", utilities.handleErrors(errorRoute));
 
 /* ***********************
  * 404 Not Found Handler
@@ -133,36 +135,34 @@ app.use("/", utilities.handleErrors(baseRoute));
  * MUST be placed AFTER all valid routes.
  *************************/
 app.use((req, res, next) => {
-  // Create a 404 error and pass it to the error handling middleware
-  const error = new Error("Page not found");
-  error.status = 404;
-  next(error); // Pass the error to the next middleware (global error handler)
+    const error = new Error("Page not found");
+    error.status = 404;
+    next(error);
 });
 
 /* ***********************
  * Global Error Handler
  * This middleware catches any errors passed via next(error) from other middleware or routes.
  * MUST be the LAST middleware in your application.
- * It's wrapped in handleErrors to ensure it's robust, especially if getNav is async.
  *************************/
 app.use(utilities.handleErrors(async (err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Oh snap! A server error occurred.";
 
-  console.error(`Error ${status}: ${message}`, err.stack); // Log full error for debugging
+  console.error(`Error ${status}: ${message}`, err.stack);
 
-  // Fetch nav again for the error page, as it's a new request context
   const nav = await utilities.getNav();
 
-  res.status(status).render("errors/error", { // Assuming your error page is at views/errors/error.ejs
+  res.status(status).render("errors/error", {
     title: `${status} Error`,
     message: message,
     nav: nav,
-    // Pass the actual error object only in development for debugging.
-    // In production, avoid exposing stack traces directly to the user.
     error: process.env.NODE_ENV === 'development' ? err : {},
   });
 }));
+
+// ... (app.listen) ...
+
 
 /* ***********************
  * Server Listen
