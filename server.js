@@ -13,14 +13,14 @@ const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
 const pool = require("./database"); // PostgreSQL connection pool
 const utilities = require('./utilities/'); // Import utility functions including handleErrors
-const cookieParser = require("cookie-parser"); // ADD THIS LINE: Require cookie-parser
+const cookieParser = require("cookie-parser"); // Require cookie-parser
 
 // Route Imports
 const staticRoutes = require("./routes/static");
 const baseRoute = require("./routes/baseRoute");
 const accountRoute = require("./routes/accountRoute");
 const inventoryRoute = require("./routes/inventoryRoute");
-// const errorRoute = require("./routes/errorRoute"); // Assuming this is for explicit error paths if any (often not needed with global handler)
+// const errorRoute = require("./routes/errorRoute"); // Optional: Only if you have a dedicated router for error pages
 
 // Check if DATABASE_URL is loaded (for debugging during deployment)
 console.log("Loaded DATABASE_URL:", process.env.DATABASE_URL ? "Yes" : "No - Check .env file or Render config");
@@ -85,29 +85,26 @@ app.use((req, res, next) => {
 
 /* ***********************
  * Middleware
+ * Apply cookie-parser and JWT token validation globally
  *************************/
-app.use(cookieParser()); // ADD THIS LINE: Apply cookie-parser middleware
-app.use(utilities.checkJWTToken); // ADD THIS LINE: Apply JWT token validation middleware (defined in utilities/index.js)
+app.use(cookieParser());
+app.use(utilities.checkJWTToken);
 
-
-// ... (previous require statements and middleware) ...
 
 /* ***********************
  * Routes
  * Order matters here: specific routes before general ones, and ALL routes before 404 handler
  *************************/
 
-// 1. ACCOUNT ROUTES (e.g., /account/login, /account/register, /account/)
-// These should generally come first if they are specific prefixes.
+// ACCOUNT ROUTES - Specific to /account prefix
 app.use("/account", utilities.handleErrors(accountRoute));
 
-// 2. INVENTORY ROUTES (e.g., /inv/, /inv/add-classification, /inv/detail/:id, etc.)
-// THESE MUST BE BEFORE THE BASE ROUTE "/"
+// INVENTORY ROUTES - Specific to /inventory or /inv prefixes
+// These MUST be placed BEFORE the general baseRoute ("/")
 app.use("/inventory", utilities.handleErrors(inventoryRoute));
-app.use("/inv", utilities.handleErrors(inventoryRoute)); // This line specifically mounts the inventory router at /inv
+app.use("/inv", utilities.handleErrors(inventoryRoute)); // This handles /inv/ for your management page
 
-// 3. OTHER SPECIFIC PAGES (e.g., /custom, /sedan, /suv, /truck)
-// These are also specific GET requests, and are fine here.
+// CUSTOM PAGES - Specific GET requests for individual pages
 app.get("/custom", utilities.handleErrors(async (req, res) => {
   res.render("custom", { title: "Custom Vehicles", nav: await utilities.getNav() });
 }));
@@ -121,12 +118,11 @@ app.get("/truck", utilities.handleErrors(async (req, res) => {
   res.render("truck", { title: "Truck Vehicles", nav: await utilities.getNav() });
 }));
 
-// 4. BASE ROUTE (Home page, /trigger-error)
-// This is the most general route for '/', and it must come LAST among your defined routes.
-// If it's above /inv, it will catch requests like /inv/ before /inv does.
+// BASE ROUTE - Catches requests for "/" and potentially "/trigger-error"
+// It must be placed LAST among your defined routes, just before the 404 handler.
 app.use("/", utilities.handleErrors(baseRoute));
 
-// ... (Explicit error route, if you have one and want to enable it) ...
+// Optional: If you have a specific router for error-related paths (uncomment if used)
 // app.use("/error", utilities.handleErrors(errorRoute));
 
 /* ***********************
@@ -137,32 +133,33 @@ app.use("/", utilities.handleErrors(baseRoute));
 app.use((req, res, next) => {
     const error = new Error("Page not found");
     error.status = 404;
-    next(error);
+    next(error); // Pass the error to the global error handler
 });
 
 /* ***********************
  * Global Error Handler
  * This middleware catches any errors passed via next(error) from other middleware or routes.
  * MUST be the LAST middleware in your application.
+ * It's wrapped in handleErrors to ensure it's robust, especially if getNav is async.
  *************************/
 app.use(utilities.handleErrors(async (err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Oh snap! A server error occurred.";
 
-  console.error(`Error ${status}: ${message}`, err.stack);
+  console.error(`Error ${status}: ${message}`, err.stack); // Log full error for debugging
 
+  // Fetch nav again for the error page, as it's a new request context
   const nav = await utilities.getNav();
 
-  res.status(status).render("errors/error", {
+  res.status(status).render("errors/error", { // Assuming your error page is at views/errors/error.ejs
     title: `${status} Error`,
     message: message,
     nav: nav,
+    // Pass the actual error object only in development for debugging.
+    // In production, avoid exposing stack traces directly to the user.
     error: process.env.NODE_ENV === 'development' ? err : {},
   });
 }));
-
-// ... (app.listen) ...
-
 
 /* ***********************
  * Server Listen
