@@ -13,6 +13,7 @@ const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
 const pool = require("./database"); // PostgreSQL connection pool
 const utilities = require('./utilities/'); // Import utility functions including handleErrors
+const cookieParser = require("cookie-parser"); // ADD THIS LINE: Require cookie-parser
 
 // Route Imports
 const staticRoutes = require("./routes/static");
@@ -81,6 +82,13 @@ app.use((req, res, next) => {
   res.locals.notice = req.flash('notice'); // Generic 'notice' flash message
   next();
 });
+
+/* ***********************
+ * Middleware
+ *************************/
+app.use(cookieParser()); // ADD THIS LINE: Apply cookie-parser middleware
+app.use(utilities.checkJWTToken); // ADD THIS LINE: Apply JWT token validation middleware (defined in utilities/index.js)
+
 
 /* ***********************
  * Routes
@@ -154,7 +162,7 @@ app.use(utilities.handleErrors(async (err, req, res, next) => {
     // In production, avoid exposing stack traces directly to the user.
     error: process.env.NODE_ENV === 'development' ? err : {},
   });
-})); // Removed the extraneous semicolon here
+}));
 
 /* ***********************
  * Server Listen

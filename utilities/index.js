@@ -1,5 +1,7 @@
 const pool = require('../database/');
-const inventoryModel = require('../models/inventory-model'); // Import the inventory model
+const inventoryModel = require('../models/inventory-model');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 /* ***********************
  * General Utilities
@@ -12,21 +14,17 @@ const inventoryModel = require('../models/inventory-model'); // Import the inven
 async function getNav() {
   let navList = '<ul>';
   try {
-    // Dynamically fetch classifications for navigation
-    const classifications = await inventoryModel.getClassifications(); // Use model to get classifications
+    const classifications = await inventoryModel.getClassifications();
     
-    navList += '<li><a href="/">Home</a></li>'; // Always include Home
+    navList += '<li><a href="/">Home</a></li>';
 
     classifications.forEach((item) => {
-      // Assuming link_path could be dynamically generated or present in DB
-      // For now, based on assignment, we'll construct the path
       const linkPath = `/inv/type/${item.classification_name}`;
       navList += `<li><a href="${linkPath}">${item.classification_name}</a></li>`;
     });
 
   } catch (error) {
     console.error("Error building navigation:", error.message, error.stack);
-    // Fallback to hardcoded navigation if DB query fails or table doesn't exist
     navList += '<li><a href="/">Home</a></li>';
     navList += '<li><a href="/inv/type/Custom">Custom</a></li>';
     navList += '<li><a href="/inv/type/Sedan">Sedan</a></li>';
@@ -40,14 +38,13 @@ async function getNav() {
 
 /**
  * Builds a classification select list (e.g., for vehicle types).
- * Fetches data from the 'classification' table using the inventoryModel.
  * @param {number} [selectedId] - The ID of the classification to be pre-selected.
  * @returns {string} The HTML string for the select list.
  */
-async function buildClassificationList(selectedId = null) { // Default to null for stickiness
+async function buildClassificationList(selectedId = null) {
   try {
-    const classifications = await inventoryModel.getClassifications(); // Use model to get classifications
-    let options = '<select name="classification_id" id="classificationList" required>';
+    const classifications = await inventoryModel.getClassifications();
+    let options = '<select name="classification_id" id="classificationList" required size="4">';
     options += '<option value="">Choose a Classification</option>';
 
     classifications.forEach((row) => {
@@ -59,10 +56,9 @@ async function buildClassificationList(selectedId = null) { // Default to null f
     return options;
   } catch (error) {
     console.error("Error building classification list:", error.message, error.stack);
-    throw new Error("Failed to build classification list for form."); // Propagate error
+    throw new Error("Failed to build classification list for form.");
   }
 }
-
 
 /**
  * Builds the HTML for a single vehicle detail view.
@@ -136,6 +132,41 @@ async function buildClassificationGrid(data) {
   return grid;
 }
 
+/* ****************************************
+* Middleware to check token validity (Existing from previous activity)
+**************************************** */
+function checkJWTToken(req, res, next) {
+ if (req.cookies.jwt) {
+  jwt.verify(
+   req.cookies.jwt,
+   process.env.ACCESS_TOKEN_SECRET,
+   function (err, accountData) {
+    if (err) {
+     req.flash("notice", "Please log in");
+     res.clearCookie("jwt");
+     return res.redirect("/account/login");
+    }
+    res.locals.accountData = accountData;
+    res.locals.loggedin = 1;
+    next();
+   });
+ } else {
+  next();
+ }
+}
+
+/* ****************************************
+ * Check Login (NEW)
+ * Purpose: Middleware to ensure a user is logged in.
+ * ************************************ */
+function checkLogin(req, res, next) { // Changed Util.checkLogin to simply checkLogin (assuming exported as checkLogin)
+  if (res.locals.loggedin) {
+    next(); // User is logged in, proceed
+  } else {
+    req.flash("notice", "Please log in."); // Flash message
+    return res.redirect("/account/login"); // Redirect to login page
+  }
+}
 
 /**
  * Higher-order function to wrap async route handlers for centralized error handling.
@@ -150,8 +181,10 @@ function handleErrors(fn) {
 
 module.exports = {
   getNav,
-  buildClassificationList, // Updated for dynamic dropdown
+  buildClassificationList,
   buildVehicleDetail,
   buildClassificationGrid,
+  checkJWTToken,
+  checkLogin, // EXPORT NEW FUNCTION
   handleErrors,
 };
