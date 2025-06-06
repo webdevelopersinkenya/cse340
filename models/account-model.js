@@ -1,4 +1,4 @@
-const pool = require("../database"); // Adjust path if your database/index.js is elsewhere
+const pool = require("../database");
 
 /* *****************************
  * Add new account to database
@@ -19,10 +19,8 @@ async function registerAccount(
       account_password,
     ]);
   } catch (error) {
-    // Log the error for debugging.
     console.error("registerAccount error:", error);
-    // Re-throw or return an error message that can be handled by the controller
-    if (error.code === '23505') { // PostgreSQL unique violation error code (e.g., duplicate email)
+    if (error.code === '23505') {
         throw new Error("Email already exists. Please login or use a different email.");
     }
     throw new Error("Failed to register account.");
@@ -53,19 +51,90 @@ async function getAccountByEmail(account_email) {
       "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1",
       [account_email]
     );
-    return result.rows[0]; // Returns the account data or undefined if not found
+    return result.rows[0];
   } catch (error) {
     console.error("getAccountByEmail error: " + error);
-    // It's generally better to throw an error here to be caught by handleErrors,
-    // or let the controller handle a 'null' return for "not found".
-    // For this specific case, returning null is fine as controller checks !accountData
     return null;
   }
 }
 
+/* *****************************
+ * Return account data using account_id (Task 5)
+ * ***************************** */
+async function getAccountById(account_id) {
+  try {
+    const result = await pool.query(
+      "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1",
+      [account_id]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("getAccountById error: " + error);
+    return null;
+  }
+}
+
+/* *****************************
+ * Update account information (Task 5)
+ * Purpose: Updates a client's first name, last name, and email.
+ * ***************************** */
+async function updateAccount(
+  account_firstname,
+  account_lastname,
+  account_email,
+  account_id
+) {
+  try {
+    const sql = `
+      UPDATE account SET
+        account_firstname = $1,
+        account_lastname = $2,
+        account_email = $3
+      WHERE account_id = $4
+      RETURNING *`;
+    const result = await pool.query(sql, [
+      account_firstname,
+      account_lastname,
+      account_email,
+      account_id,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("updateAccount error:", error);
+    if (error.code === '23505') { // Unique constraint violation (e.g., email already exists)
+      throw new Error("Email already exists. Please use a different email.");
+    }
+    throw new Error("Failed to update account information.");
+  }
+}
+
+/* *****************************
+ * Update account password (Task 5)
+ * Purpose: Updates a client's hashed password.
+ * ***************************** */
+async function updatePassword(account_password, account_id) {
+  try {
+    const sql = `
+      UPDATE account SET
+        account_password = $1
+      WHERE account_id = $2
+      RETURNING *`;
+    const result = await pool.query(sql, [
+      account_password, // This should be the already hashed password
+      account_id,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("updatePassword error:", error);
+    throw new Error("Failed to update password.");
+  }
+}
 
 module.exports = {
   registerAccount,
-  checkExistingEmail, // Export this for validation middleware
+  checkExistingEmail,
   getAccountByEmail,
+  getAccountById,
+  updateAccount,
+  updatePassword,
 };

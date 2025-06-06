@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const accountController = require("../controllers/accountController");
 const utilities = require("../utilities/");
-const regValidate = require("../middleware/validation"); // Assuming you have this validation middleware
+const regValidate = require("../middleware/validation");
 
 /* **************************************
  * GET login view
@@ -41,16 +41,63 @@ router.post(
 );
 
 /* **************************************
- * GET Account Management View (UPDATED)
+ * GET Account Management View
  * URL: /account/
  * Purpose: Displays client's account dashboard after login
  * Applies checkLogin middleware to protect this route.
  ***************************************/
 router.get(
   "/",
-  utilities.checkLogin, // ADD THIS LINE: Apply checkLogin middleware
+  utilities.checkLogin,
   utilities.handleErrors(accountController.buildAccountManagement)
 );
+
+/* **************************************
+ * GET Account Update View (Task 5)
+ * URL: /account/update
+ * Purpose: Displays form for updating account profile information and changing password
+ * Protected by checkLogin
+ ***************************************/
+router.get(
+  "/update",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccountUpdate)
+);
+
+/* **************************************
+ * Process Account Profile Update (Task 5)
+ * URL: /account/update (POST)
+ * Purpose: Handles submission of account profile update form
+ * Protected by checkLogin, includes validation middleware
+ ***************************************/
+router.post(
+  "/update",
+  utilities.checkLogin,
+  regValidate.updateAccountRules(), // Validation rules for profile update
+  regValidate.checkUpdateData, // Check function for profile update
+  utilities.handleErrors(accountController.updateAccount)
+);
+
+/* **************************************
+ * Process Account Password Update (Task 5)
+ * URL: /account/updatePassword (POST)
+ * Purpose: Handles submission of password change form
+ * Protected by checkLogin, includes validation middleware
+ ***************************************/
+router.post(
+  "/updatePassword",
+  utilities.checkLogin,
+  regValidate.changePasswordRules(), // Validation rules for password change
+  regValidate.checkPasswordData, // Check function for password change
+  utilities.handleErrors(accountController.updatePassword)
+);
+
+/* **************************************
+ * Process Logout (Task 6)
+ * URL: /account/logout
+ * Purpose: Clears JWT cookie and redirects to home
+ ***************************************/
+router.get("/logout", utilities.handleErrors(accountController.accountLogout));
 
 
 module.exports = router;

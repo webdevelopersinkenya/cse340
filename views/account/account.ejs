@@ -1,0 +1,39 @@
+<% /*
+    This view serves as the basic account management page after successful login.
+*/ %>
+
+<% /*
+    The 'title' and 'nav' variables are passed from the controller
+    and used by the main layout.ejs.
+*/ %>
+
+<div class="account-management-container">
+    <% /* Greet the client by first name (Task 3) */ %>
+    <% if (typeof res.locals.accountData !== 'undefined' && res.locals.accountData.account_firstname) { %>
+        <h1>Welcome, <%= res.locals.accountData.account_firstname %>!</h1>
+        <p>You are now logged in to your account.</p>
+        <p>Your email: <%= res.locals.accountData.account_email %></p>
+        <p>Account Type: <%= res.locals.accountData.account_type %></p>
+
+        <h2>Account Management Options</h2>
+        <ul>
+            <% /* Add "update account information" link for all clients (Task 3) */ %>
+            <li><a href="/account/update" title="Update Account Information">Update Account Information</a></li>
+
+            <% /* Inventory Management link only for Employee or Admin (Task 3) */ %>
+            <% if (res.locals.accountData.account_type === 'Admin' || res.locals.accountData.account_type === 'Employee') { %>
+                <li>
+                    <h3>Inventory Management</h3>
+                    <p><a href="/inv/" title="Manage Inventory">Manage Inventory</a></p>
+                </li>
+            <% } %>
+        </ul>
+    <% } else { %>
+        <% /* Fallback if accountData isn't fully available (shouldn't happen if checkLogin works) */ %>
+        <h1>Account Management</h1>
+        <p>You are logged in, but your account data is not fully available.</p>
+        <p><a href="/account/login">Please log in again.</a></p>
+    <% } %>
+
+    <%- messages() %> <%-- Displays flash messages --%>
+</div>

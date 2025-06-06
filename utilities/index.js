@@ -133,7 +133,7 @@ async function buildClassificationGrid(data) {
 }
 
 /* ****************************************
-* Middleware to check token validity (Existing from previous activity)
+* Middleware to check token validity
 **************************************** */
 function checkJWTToken(req, res, next) {
  if (req.cookies.jwt) {
@@ -146,8 +146,8 @@ function checkJWTToken(req, res, next) {
      res.clearCookie("jwt");
      return res.redirect("/account/login");
     }
-    res.locals.accountData = accountData;
-    res.locals.loggedin = 1;
+    res.locals.accountData = accountData; // Make account data available to views and next middleware
+    res.locals.loggedin = 1; // Set loggedin flag for views
     next();
    });
  } else {
@@ -156,10 +156,11 @@ function checkJWTToken(req, res, next) {
 }
 
 /* ****************************************
- * Check Login (NEW)
+ * Check Login
  * Purpose: Middleware to ensure a user is logged in.
+ * Must be used AFTER checkJWTToken.
  * ************************************ */
-function checkLogin(req, res, next) { // Changed Util.checkLogin to simply checkLogin (assuming exported as checkLogin)
+function checkLogin(req, res, next) {
   if (res.locals.loggedin) {
     next(); // User is logged in, proceed
   } else {
@@ -167,6 +168,30 @@ function checkLogin(req, res, next) { // Changed Util.checkLogin to simply check
     return res.redirect("/account/login"); // Redirect to login page
   }
 }
+
+/* ****************************************
+ * Check Account Type (Authorization Middleware) (Task 2)
+ * Purpose: Middleware to check if a logged-in user has 'Admin' or 'Employee' account_type.
+ * Must be used AFTER checkLogin.
+ * ************************************ */
+function checkAccountType(req, res, next) {
+  // Check if user is logged in AND their account_type is 'Admin' or 'Employee'
+  // Use res.locals.accountData which is set by checkJWTToken
+  if (res.locals.loggedin && (res.locals.accountData.account_type === 'Admin' || res.locals.accountData.account_type === 'Employee')) {
+    next(); // Authorized, proceed
+  } else {
+    req.flash("notice", "You are not authorized to access this page. Please log in with appropriate permissions.");
+    // Redirect based on whether they are logged in or not
+    if (res.locals.loggedin) {
+      // If logged in but not authorized for this page, send them to general account page
+      return res.redirect("/account/");
+    } else {
+      // Not logged in, send to login page
+      return res.redirect("/account/login");
+    }
+  }
+}
+
 
 /**
  * Higher-order function to wrap async route handlers for centralized error handling.
@@ -185,6 +210,7 @@ module.exports = {
   buildVehicleDetail,
   buildClassificationGrid,
   checkJWTToken,
-  checkLogin, // EXPORT NEW FUNCTION
+  checkLogin,
+  checkAccountType, // EXPORT NEW FUNCTION
   handleErrors,
 };
