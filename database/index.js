@@ -12,7 +12,11 @@ require("dotenv").config();
  *************************/
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // Your database connection URL from environment variables
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  // FIX: Always use SSL, as your database requires it even in development.
+  // rejectUnauthorized: false is common for self-signed or non-public CA certs.
+  ssl: {
+    rejectUnauthorized: false,
+  },
   
   // *** CRUCIAL SETTINGS FOR ECONNRESET ***
   max: 20, // Maximum number of clients (connections) in the pool. Adjust based on your Render.com DB tier.
@@ -31,7 +35,7 @@ pool.query('SELECT 1 + 1 AS solution')
   .catch(err => {
     console.error("Database connection failed on startup:", err.message, err.stack);
     // You might want to exit the process or take other action if DB connection is critical for app startup
-    // process.exit(1);
+    // process.exit(1); // Uncomment this if you want the app to stop if DB connection fails
   });
 
 // Export the pool so it can be used throughout the application
