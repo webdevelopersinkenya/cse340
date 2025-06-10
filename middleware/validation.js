@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const accountModel = require("../models/account-model"); // Assuming you have an account model for DB checks
+const utilities = require("../utilities/"); // Assuming utilities are available for nav and error handling
 
 const validate = {}; // Create a validation object
 
@@ -59,7 +60,9 @@ validate.checkLoginData = async (req, res, next) => {
   next(); // No errors, proceed to next middleware/controller
 };
 
-// Assuming you also have these from previous assignments for registration
+/* **********************************
+ * Registration Data Validation Rules
+ * ********************************* */
 validate.registationRules = () => {
   return [
     body("account_firstname")
@@ -90,6 +93,9 @@ validate.registationRules = () => {
   ];
 };
 
+/* ***********************************
+ * Check Registration Data
+ * ********************************* */
 validate.checkRegData = async (req, res, next) => {
   const { account_firstname, account_lastname, account_email } = req.body;
   let errors = [];
@@ -107,6 +113,112 @@ validate.checkRegData = async (req, res, next) => {
     return;
   }
   next();
+};
+
+/* **********************************
+ * Account Update Data Validation Rules (Task 5)
+ * ********************************* */
+validate.updateAccountRules = () => {
+    return [
+        // Account Firstname is required and must not be empty
+        body("account_firstname")
+            .trim()
+            .isLength({ min: 1 })
+            .withMessage("Please provide a first name."),
+
+        // Account Lastname is required and must not be empty
+        body("account_lastname")
+            .trim()
+            .isLength({ min: 1 })
+            .withMessage("Please provide a last name."),
+
+        // Account Email is required, valid email, and must not already exist (excluding current user's email)
+        body("account_email")
+            .trim()
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("A valid email is required.")
+            .custom(async (account_email, { req }) => {
+                const account_id = res.locals.accountData.account_id; // Get current account_id from locals
+                const account = await accountModel.getAccountById(account_id); // Get current account data
+                // Only check if email exists if it's different from the current email
+                if (account_email !== account.account_email) {
+                    const emailExists = await accountModel.checkExistingEmail(account_email);
+                    if (emailExists) {
+                        throw new Error("Email address already exists. Please use a different email.");
+                    }
+                }
+            }),
+    ];
+};
+
+/* ***********************************
+ * Check Account Update Data (Task 5)
+ * ********************************* */
+validate.checkUpdateData = async (req, res, next) => {
+    const { account_firstname, account_lastname, account_email, account_id } = req.body;
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        req.flash("notice", "Please fix the errors below to update your account.");
+        res.status(400).render("account/update", {
+            title: "Edit Account",
+            nav,
+            errors: errors.array(),
+            account_firstname,
+            account_lastname,
+            account_email,
+            account_id, // Pass account_id back to view
+        });
+        return;
+    }
+    next();
+};
+
+/* **********************************
+ * Change Password Data Validation Rules (Task 5)
+ * ********************************* */
+validate.changePasswordRules = () => {
+    return [
+        // Password is required and must meet requirements
+        body("account_password")
+            .trim()
+            .isLength({ min: 10 })
+            .withMessage("New password must be at least 10 characters.")
+            .matches(
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{10,}$/
+            )
+            .withMessage(
+                "New password must contain at least 1 uppercase, 1 number, and 1 special character."
+            ),
+    ];
+};
+
+/* ***********************************
+ * Check Password Change Data (Task 5)
+ * ********************************* */
+validate.checkPasswordData = async (req, res, next) => {
+    const { account_id } = req.body; // Assuming account_id is passed for password update
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        req.flash("notice", "Please fix the errors below to change your password.");
+        res.status(400).render("account/update", { // Render the update page again for password errors
+            title: "Edit Account",
+            nav,
+            errors: errors.array(),
+            account_id,
+            // You might want to re-fetch other account data here if needed,
+            // or pass it from res.locals if it's already available from checkLogin
+            account_firstname: res.locals.accountData.account_firstname,
+            account_lastname: res.locals.accountData.account_lastname,
+            account_email: res.locals.accountData.account_email,
+        });
+        return;
+    }
+    next();
 };
 
 
