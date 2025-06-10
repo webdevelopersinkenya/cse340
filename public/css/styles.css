@@ -39,7 +39,17 @@ header {
     align-items: center;
    
 }
+header a {
+    color: white; /* Sets the text color to white */
+    text-decoration: none; /* Removes the default underline from links */
+    font-weight: bold;
+}
 
+/* Optional: Style for links on hover to provide feedback */
+header a:hover {
+    color: #eee; /* Slightly lighter white on hover */
+    text-decoration: underline; /* Adds underline on hover */
+}
 header h1 {
     margin: 0;
     font-size: 2em;
@@ -225,7 +235,7 @@ main {
 }
 
 .upgrade-item {
-    background-color: #f9f9f9;
+    background-color: #007bff;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
@@ -250,6 +260,7 @@ main {
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+   
 }
 
 .upgrade-icon-box img,
@@ -261,9 +272,9 @@ main {
 
 .upgrade-item p {
     font-weight: bold;
-    color: #555;
+    color: white;
     margin: 0;
-    font-size: 0.9em;
+    font-size: bold;
 }
 
 /* Delorean Reviews Section */
