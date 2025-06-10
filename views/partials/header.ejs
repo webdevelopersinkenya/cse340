@@ -4,10 +4,10 @@
         <img src="/images/site/logo.png" alt="CSE Motors Logo">
     </a>
     <div class="account-links">
-        <% if (res.locals.loggedin) { %>
+        <% if (loggedin) { %>                                            <!-- Changed from res.locals.loggedin -->
             <% /* Display Welcome message and Logout link when logged in */ %>
-            <a href="/account/" title="Welcome, <%= res.locals.accountData.account_firstname %>">
-                Welcome <%= res.locals.accountData.account_firstname %>
+            <a href="/account/" title="Welcome, <%= accountData.account_firstname %>">  <!-- Changed from res.locals.accountData -->
+                Welcome <%= accountData.account_firstname %>             <!-- Changed from res.locals.accountData -->
             </a>
             <a href="/account/logout" title="Click to log out">Logout</a>
         <% } else { %>

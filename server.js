@@ -90,6 +90,26 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 app.use(utilities.checkJWTToken);
 
+/* ***********************
+ * Custom res.locals Initialization Middleware
+ * This middleware runs for every request and ensures that
+ * loggedin and accountData are always defined in res.locals,
+ * preventing ReferenceErrors in EJS templates.
+ * This should run AFTER utilities.checkJWTToken so that checkJWTToken
+ * can override these defaults if a user is logged in.
+ *************************/
+app.use((req, res, next) => {
+  // Initialize loggedin to false if not already set by checkJWTToken
+  if (typeof res.locals.loggedin === 'undefined') {
+    res.locals.loggedin = false;
+  }
+  // Initialize accountData to an empty object if not already set
+  if (typeof res.locals.accountData === 'undefined') {
+    res.locals.accountData = {}; // Or null, depending on your template's needs
+  }
+  next();
+});
+
 
 /* ***********************
  * Routes
