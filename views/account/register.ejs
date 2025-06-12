@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/style.css"> <!-- Optional CSS -->
+</head>
+<body>
+  <main>
+    <h1>Create an Account</h1>
+
+    <% if (typeof error !== 'undefined') { %>
+      <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/account/register" method="POST">
+      <div>
+        <label for="firstname">First Name:</label>
+        <input type="text" name="firstname" id="firstname" required>
+      </div>
+
+      <div>
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" id="lastname" required>
+      </div>
+
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+      </div>
+
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required minlength="6">
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="/account/login">Log in here</a></p>
+  </main>
+</body>
+</html>
