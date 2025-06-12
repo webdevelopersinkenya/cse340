@@ -68,6 +68,13 @@ header .account-link {
 header .account-link:hover {
     color: #eeeeee;
 }
+nav a.active {
+  color: #fff;
+  background-color: #007BFF;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
 
 /* Navigation Styles */
 nav {
