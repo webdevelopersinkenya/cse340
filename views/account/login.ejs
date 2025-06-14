@@ -1,7 +1,9 @@
 <% /*
   This view contains the login form.
-  Ensure the form's action and method are correct for the login process.
+  It uses the "form-container" class and sets the page title to "Login".
 */ %>
+
+<% title = "Login"; %>
 
 <div class="form-container">
   <h1><%= title %></h1>
@@ -36,7 +38,7 @@
       required
     />
     <span class="password-info">
-      Passwords must be at least 10 characters and contain at least 1 uppercase, 1 number, and 1 special character.
+      Passwords must be at least 10 characters and contain at least 1 uppercase letter, 1 number, and 1 special character.
     </span>
 
     <button type="submit">Login</button>

@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head') %>
+  <%- include('../partials/head') %>
 </head>
-<body>
-    <div id="wrapper">
-        <%- include('../partials/header') %>
-        <!-- Make sure not to duplicate navigation if already in header -->
-        <%- include('../partials/navigation') %>
-        <main>
-            <%- body %>
-        </main>
-        <%- include('../partials/footer') %>
-    </div>
+<body class="<%= (title === 'Login' || title === 'Register') ? 'auth-page' : '' %>">
+  <div id="wrapper">
+    
+    <!-- Only show header and navigation if not login or register page -->
+    <% if (title !== 'Login' && title !== 'Register') { %>
+      <%- include('../partials/header') %>
+      <%- include('../partials/navigation') %>
+    <% } %>
+
+    <main>
+      <%- body %>
+    </main>
+
+    <!-- Only show footer if not login or register page -->
+    <% if (title !== 'Login' && title !== 'Register') { %>
+      <%- include('../partials/footer') %>
+    <% } %>
+    
+  </div>
 </body>
 </html>
