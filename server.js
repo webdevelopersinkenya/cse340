@@ -83,7 +83,7 @@ app.use(express.json());
  *******************************/
 app.use("/", static);
 app.use("/inv", inventoryRoute);
-app.use("/account", accountRoute); // ✅ Inserted
+app.use("/account", accountRoute); // 
 
 /*******************************
  * Error Handling
